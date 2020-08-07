@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\BookList::class,
-        Commands\SearchList::class
+        Commands\SearchList::class,
     ];
 
     /**
@@ -37,6 +37,8 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__.'/BookList');
+        $this->load(__DIR__.'/SearchList');
 
         require base_path('routes/console.php');
     }

@@ -5,7 +5,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
-
+// Read file books json to show all books in booklist
 class BookList extends Command
 {
     /**
@@ -20,17 +20,13 @@ class BookList extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Command show all booklist';
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * Execute the console command.
@@ -39,19 +35,19 @@ class BookList extends Command
      */
     public function handle()
     {
-
-        try{
-
+        try
+        {
             $jsonString = Storage::disk('local')->get('books.json');
             $data = json_decode($jsonString, true);
             dump($data);
             dd();
-
         }
+
         catch (Exception $e)
         {
             $this->error("Fail!");
         }
+
         return 0;
 
     }
