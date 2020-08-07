@@ -14,7 +14,7 @@ class SearchList extends Command
      *
      * @var string
      */
-    protected $signature = 'search:book {--key=}';
+    protected $signature = 'search:book {--Published} {--key}';
 
 
     /**
@@ -41,58 +41,56 @@ class SearchList extends Command
      */
     public function handle()
     {
-        //$pub = $this->ask('Published: ');
+        $pub = $this->ask('Published: ');
         $key = $this->ask('key: ');
 
         try
         {
-            $gender = $this->anticipate('search', ['Published', 'key']);
+            $gender = $this->options('search', ['Published', 'key']);
             $getString = Storage::disk('local')->get('books.json');
             $data = json_decode($getString, true);
             $books = collect(collect($data)['books']);
 
-            if($gender == "key")
+            if(($gender == "key") && ($gender == "Published" ))
             {
-                try {
-                    $matchedBooks1 = $books->filter(function ($book) use($key) {
-                        $resultInTitle  = str_contains($book['title'], $key);
-                        $resultInDes = str_contains($book['description'], $key);
-                        if($resultInTitle != null)
-                            return $resultInTitle;
-                        if($resultInDes != null)
-                            return $resultInDes;
+                    $fillBook = $books->filter(function ($book) use($key,$pub)
+                    {
+                        $date = data_create($pub);
+                        $dateFormat = date_format($date,"Y-m-d");
+
+                        $resultTitle  = str_contains($book['title'], $key);
+                        $resultDes = str_contains($book['description'], $key);
+
+                        if($resultTitle != null)
+                        {
+                            $reultPublish = str_contains($book['published'], $dateFormat);
+
+                            if($reultPublish != null)
+                            {
+                                return $resultTitle;
+                            }
+                            return null;
+                        }
+
+                        if($resultDes != null)
+                        {
+                            $reultPublish = str_contains($book['published'], $dateFormat);
+
+                            if($reultPublish != null)
+                            {
+                                return $resultDes;
+                            }
+                            return null;
+                        }
+
                         return null;
                     });
-                    $collection1 = $matchedBooks1->map(function ($item) {
+
+                    $option = $fillBook->map(function ($item) {
                         return ['isbn' => $item['isbn'], 'title' => $item['title'], 'published' => $item['published'], 'pages' => $item['pages']];
                     });
+                    dd($option);
 
-                    dd($collection1);
-                }
-                catch (Exception $e)
-                {
-                    $this->error("Your key can't find");
-                }
-
-            }
-
-            if ($gender == "Published")
-            {
-                try {
-                    $matchedBooks2 = $books->filter(function ($book) use($key) {
-                        $date = date_create($key);
-                        $dateFormat = date_format($date,"Y-m-d");
-                        return str_contains($book['published'], $dateFormat);;
-                    });
-                    $collection2 = $matchedBooks2->map(function ($item) {
-                        return ['isbn' => $item['isbn'], 'title' => $item['title'], 'published' => $item['published'], 'pages' => $item['pages']];
-                    });
-                    dd($collection2);
-                }
-                catch (Exception $e)
-                {
-                    $this->error('Wrong format datetime');
-                }
             }
         }
 
