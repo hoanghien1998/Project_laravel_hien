@@ -32,7 +32,7 @@ class BookList extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return integer
      */
     public function handle()
     {
@@ -45,6 +45,5 @@ class BookList extends Command
         }
 
         return 0;
-
     }
 }
