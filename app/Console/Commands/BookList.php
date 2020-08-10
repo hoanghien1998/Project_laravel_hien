@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Console\Commands;
+
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -35,16 +36,11 @@ class BookList extends Command
      */
     public function handle()
     {
-        try
-        {
+        try {
             $jsonString = Storage::disk('local')->get('books.json');
-            $data = json_decode($jsonString, true);
-            dump($data);
-            dd();
-        }
-
-        catch (Exception $e)
-        {
+            $data = collect($jsonString, true);
+            $this->info($data);
+        } catch (Exception $e) {
             $this->error("Fail!");
         }
 

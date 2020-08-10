@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Console\Commands;
+
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -44,58 +45,48 @@ class SearchList extends Command
         $pub = $this->ask('Published: ');
         $key = $this->ask('key: ');
 
-        try
-        {
+        try {
             $gender = $this->options('search', ['Published', 'key']);
             $getString = Storage::disk('local')->get('books.json');
             $data = json_decode($getString, true);
             $books = collect(collect($data)['books']);
 
-            if(($gender == "key") && ($gender == "Published" ))
-            {
-                    $fillBook = $books->filter(function ($book) use($key,$pub)
-                    {
-                        $date = data_create($pub);
-                        $dateFormat = date_format($date,"Y-m-d");
+            if (($gender == "key") && ($gender == "Published")) {
+                $fillBook = $books->filter(function ($book) use ($key, $pub) {
+                    $date = data_create($pub);
+                    $dateFormat = date_format($date, "Y-m-d");
 
-                        $resultTitle  = str_contains($book['title'], $key);
-                        $resultDes = str_contains($book['description'], $key);
+                    $resultTitle = str_contains($book['title'], $key);
+                    $resultDes = str_contains($book['description'], $key);
 
-                        if($resultTitle != null)
-                        {
-                            $reultPublish = str_contains($book['published'], $dateFormat);
+                    if ($resultTitle != null) {
+                        $reultPublish = str_contains($book['published'], $dateFormat);
 
-                            if($reultPublish != null)
-                            {
-                                return $resultTitle;
-                            }
-                            return null;
+                        if ($reultPublish != null) {
+                            return $resultTitle;
                         }
-
-                        if($resultDes != null)
-                        {
-                            $reultPublish = str_contains($book['published'], $dateFormat);
-
-                            if($reultPublish != null)
-                            {
-                                return $resultDes;
-                            }
-                            return null;
-                        }
-
                         return null;
-                    });
+                    }
 
-                    $option = $fillBook->map(function ($item) {
-                        return ['isbn' => $item['isbn'], 'title' => $item['title'], 'published' => $item['published'], 'pages' => $item['pages']];
-                    });
-                    dd($option);
+                    if ($resultDes != null) {
+                        $reultPublish = str_contains($book['published'], $dateFormat);
+
+                        if ($reultPublish != null) {
+                            return $resultDes;
+                        }
+                        return null;
+                    }
+
+                    return null;
+                });
+
+                $option = $fillBook->map(function ($item) {
+                    return ['isbn' => $item['isbn'], 'title' => $item['title'], 'published' => $item['published'], 'pages' => $item['pages']];
+                });
+                $this->info($option);
 
             }
-        }
-
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->error('Fail');
         }
 
