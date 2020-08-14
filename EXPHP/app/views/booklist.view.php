@@ -11,9 +11,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="container">
+<div class="container-fluid">
     <h2 style="text-align: center">LIST BOOK</h2>
-    <table class="table table-hover table-bordered" style="width: 1000px">
+    <table class="table table-hover table-bordered">
         <thead>
         <tr class="success">
             <th>ISBN</th>
@@ -25,6 +25,7 @@
             <th>Pages</th>
             <th style="min-width: 200px">Description</th>
             <th style="max-width: 200px">Website</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -42,6 +43,9 @@
             echo '<td>'.$book["pages"].'</td>';
             echo '<td>'.$book["description"].'</td>';
             echo '<td>'.$book["website"].'</td>';
+            echo '<td><button type="button" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-success" style="margin-top: 5px">Edit</button>
+                <button type="button" class="btn btn-info" style="margin-top: 5px">Reload</button></td>';
             echo '</tr>';
         }
         ?>

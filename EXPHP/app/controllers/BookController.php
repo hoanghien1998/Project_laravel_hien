@@ -38,8 +38,6 @@ class BookController
             );
 
             $finalBooks = json_encode($listBook);
-            var_dump($finalBooks);
-            die();
 
             file_put_contents('core/database/books.json', $finalBooks);
         } else {
