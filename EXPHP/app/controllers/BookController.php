@@ -19,7 +19,7 @@ class BookController
         if (file_exists('core/database/books.json')) {
             $array_data = App::get('Connect');
             /** @var TYPE_NAME $extra */
-            $array_data[] = $extra = array(
+            $extra = array(
                 'isbn'           =>     $_POST['isbn'],
                 'title'          =>     $_POST["title"],
                 'subtitle'       =>     $_POST["subtitle"],
@@ -30,13 +30,16 @@ class BookController
                 'description'    =>     $_POST["description"],
                 'website'        =>     $_POST["website"]
             );
-            return json_decode($array_data);
-            die();
+
+            $array_data[] = $extra;
+
             $listBook = array(
                 "books" => $array_data
             );
 
             $finalBooks = json_encode($listBook);
+            var_dump($finalBooks);
+            die();
 
             file_put_contents('core/database/books.json', $finalBooks);
         } else {
