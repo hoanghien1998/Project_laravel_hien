@@ -13,6 +13,10 @@
 <body>
 <div class="container-fluid">
     <h2 style="text-align: center">LIST BOOK</h2>
+    <div>
+    <div style="float: left; margin-right: 50px"><a href="add"><button type="button" class="btn btn-primary">Add</button></a></div>
+    <div style="margin-bottom: 5px"><a><button type="button" class="btn btn-info" style="margin-top: 5px">Reload</button></a></div>
+    </div>
     <table class="table table-hover table-bordered">
         <thead>
         <tr class="success">
@@ -25,7 +29,6 @@
             <th>Pages</th>
             <th style="min-width: 200px">Description</th>
             <th style="max-width: 200px">Website</th>
-            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -34,7 +37,7 @@
         /** @var TYPE_NAME $data */
         foreach ($data['books'] as $book) {
             echo '<tr>';
-            echo '<td>'.$book["isbn"].'</td>';
+            echo '<td> <a href="/update?isbn='.$book["isbn"].'">'.$book["isbn"].'</a></td>';
             echo '<td>'.$book["title"].'</td>';
             echo '<td>'.$book["subtitle"].'</td>';
             echo '<td>'.$book["author"].'</td>';
@@ -43,9 +46,6 @@
             echo '<td>'.$book["pages"].'</td>';
             echo '<td>'.$book["description"].'</td>';
             echo '<td>'.$book["website"].'</td>';
-            echo '<td><button type="button" class="btn btn-primary">Add</button>
-                <button type="button" class="btn btn-success" style="margin-top: 5px">Edit</button>
-                <button type="button" class="btn btn-info" style="margin-top: 5px">Reload</button></td>';
             echo '</tr>';
         }
         ?>
