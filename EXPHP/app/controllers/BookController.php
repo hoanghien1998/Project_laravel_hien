@@ -1,8 +1,9 @@
 <?php
-
+/**
+ * use BookController to handle data that the user inputs or submits
+ */
 use App;
 use Request;
-use Connect;
 
 class BookController
 {
@@ -36,7 +37,7 @@ class BookController
                     }
                 }
                 /** @var TYPE_NAME $extra */
-                $extra = array(
+                $extra = [
                     'isbn' => $_POST['isbn'],
                     'title' => $_POST["title"],
                     'subtitle' => $_POST["subtitle"],
@@ -45,13 +46,13 @@ class BookController
                     'publisher' => $_POST["publisher"],
                     'pages' => $_POST['pages'],
                     'description' => $_POST["description"],
-                    'website' => $_POST["website"]
-                );
+                    'website' => $_POST["website"],
+                ];
                 $array_data[] = $extra;
 
-                $listBook = array(
-                    "books" => $array_data
-                );
+                $listBook = [
+                    "books" => $array_data,
+                ];
 
                 $finalBooks = json_encode($listBook);
 
@@ -84,7 +85,7 @@ class BookController
         } elseif (Request::method() == 'POST') {
             // Input
             $isbn = Request::post('isbn');
-            $extra = array(
+            $extra = [
                 'isbn' => $_POST['isbn'],
                 'title' => $_POST["title"],
                 'subtitle' => $_POST["subtitle"],
@@ -93,8 +94,8 @@ class BookController
                 'publisher' => $_POST["publisher"],
                 'pages' => $_POST['pages'],
                 'description' => $_POST["description"],
-                'website' => $_POST["website"]
-            );
+                'website' => $_POST["website"],
+            ];
 
             $array_data = App::get('Connect');
             foreach ($array_data as $key => $array_datum) {
@@ -104,9 +105,9 @@ class BookController
                 }
             }
 
-            $listBook = array(
-                "books" => $array_data
-            );
+            $listBook = [
+                "books" => $array_data,
+            ];
 
             $finalBooks = json_encode($listBook);
 

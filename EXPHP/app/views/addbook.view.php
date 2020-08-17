@@ -21,15 +21,15 @@ if (!empty($data['found_book'])) {
     <h1 style="text-align: center">Form Book</h1>
     <form class="form-horizontal" <?php if (!empty($data['create'])) {
         echo 'action="/add"';
-    } else {
-        echo 'action="/update"';
-    } ?> method="post">
+                                  } else {
+                                      echo 'action="/update"';
+                                  } ?> method="post">
         <div class="form-group">
             <label class="control-label col-sm-2" for="is">IBSN:</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="isbn" <?php if (!empty($found_book['isbn'])) {
                     echo "value={$found_book['isbn']}";
-                } ?> name="isbn" placeholder="Enter isbn">
+                                                                  } ?> name="isbn" placeholder="Enter isbn">
                 <p style="color: brown"><?php echo isset($error['isbn']) ? $error['isbn'] : ''; ?></p>
             </div>
         </div>
@@ -38,7 +38,7 @@ if (!empty($data['found_book'])) {
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="title"<?php if (!empty($found_book['title'])) {
                     echo "value='{$found_book['title']}'";
-                } ?> name="title" placeholder="Enter title">
+                                                                  } ?> name="title" placeholder="Enter title">
             </div>
         </div>
         <div class="form-group">
@@ -46,7 +46,7 @@ if (!empty($data['found_book'])) {
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="subtitle" <?php if (!empty($found_book['subtitle'])) {
                     echo "value='{$found_book['subtitle']}'";
-                } ?> name="subtitle" placeholder="Enter subtitle">
+                                                                      } ?> name="subtitle" placeholder="Enter subtitle">
             </div>
         </div>
         <div class="form-group">
@@ -54,7 +54,7 @@ if (!empty($data['found_book'])) {
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="author" <?php if (!empty($found_book['author'])) {
                     echo "value='{$found_book['author']}'";
-                } ?> name="author" placeholder="Enter author">
+                                                                    } ?> name="author" placeholder="Enter author">
             </div>
         </div>
         <div class="form-group">
@@ -62,7 +62,7 @@ if (!empty($data['found_book'])) {
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="published" <?php if (!empty($found_book['published'])) {
                     echo "value='{$found_book['published']}'";
-                } ?> name="published" placeholder="Enter published">
+                                                                       } ?> name="published" placeholder="Enter published">
             </div>
         </div>
         <div class="form-group">
@@ -78,7 +78,7 @@ if (!empty($data['found_book'])) {
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="pages" <?php if (!empty($found_book['pages'])) {
                     echo "value='{$found_book['pages']}'";
-                } ?> name="pages" placeholder="Enter pages">
+                                                                   } ?> name="pages" placeholder="Enter pages">
             </div>
         </div>
         <div class="form-group">
@@ -86,7 +86,7 @@ if (!empty($data['found_book'])) {
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="description" <?php if (!empty($found_book['description'])) {
                     echo "value='{$found_book['description']}'";
-                } ?> name="description" placeholder="Enter description">
+                                                                         } ?> name="description" placeholder="Enter description">
             </div>
         </div>
         <div class="form-group">
@@ -94,16 +94,16 @@ if (!empty($data['found_book'])) {
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="website" <?php if (!empty($found_book['website'])) {
                     echo "value='{$found_book['website']}'";
-                } ?> name="website" placeholder="Enter website">
+                                                                     } ?> name="website" placeholder="Enter website">
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-success"><?php if (!empty($data['create'])) {
                         echo 'Add book';
-                    } else {
-                        echo "Update book";
-                    } ?> </button>
+                                                              } else {
+                                                                  echo "Update book";
+                                                              } ?> </button>
             </div>
         </div>
     </form>
