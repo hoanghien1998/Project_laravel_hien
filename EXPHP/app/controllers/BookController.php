@@ -7,6 +7,7 @@ use Connect;
 class BookController
 {
     protected $request;
+
     public function bookList()
     {
         $books = App::get('Connect');
@@ -19,19 +20,32 @@ class BookController
             $create = 1;
             return view('addbook', compact('create'));
         } else {
+            $error = [];
             if (file_exists('core/database/books.json')) {
                 $array_data = App::get('Connect');
+                // Check isbn is numeric
+                if (!is_numeric($_POST['isbn'])) {
+                    $error['isbn'] = "Isbn is numeric";
+                    return view('addbook', compact('error'));
+                }
+                // Validate isbn
+                foreach ($array_data as $array_datum) {
+                    if ($array_datum['isbn'] == $_POST['isbn']) {
+                        $error['isbn'] = "Isbn is unique, enter the orther one";
+                        return view('addbook', compact('error'));
+                    }
+                }
                 /** @var TYPE_NAME $extra */
                 $extra = array(
-                    'isbn'           =>     $_POST['isbn'],
-                    'title'          =>     $_POST["title"],
-                    'subtitle'       =>     $_POST["subtitle"],
-                    'author'         =>     $_POST['author'],
-                    'published'      =>     $_POST["published"],
-                    'publisher'      =>     $_POST["publisher"],
-                    'pages'          =>     $_POST['pages'],
-                    'description'    =>     $_POST["description"],
-                    'website'        =>     $_POST["website"]
+                    'isbn' => $_POST['isbn'],
+                    'title' => $_POST["title"],
+                    'subtitle' => $_POST["subtitle"],
+                    'author' => $_POST['author'],
+                    'published' => $_POST["published"],
+                    'publisher' => $_POST["publisher"],
+                    'pages' => $_POST['pages'],
+                    'description' => $_POST["description"],
+                    'website' => $_POST["website"]
                 );
                 $array_data[] = $extra;
 
@@ -53,7 +67,7 @@ class BookController
 
     public function updateBook()
     {
-        //input
+        // Input
         if (Request::method() == 'GET') {
             $isbn = Request::get('isbn');
             //check exists
@@ -68,24 +82,24 @@ class BookController
             }
             return view('addbook', compact('found_book'));
         } elseif (Request::method() == 'POST') {
-            //input
+            // Input
             $isbn = Request::post('isbn');
             $extra = array(
-                'isbn'           =>     $_POST['isbn'],
-                'title'          =>     $_POST["title"],
-                'subtitle'       =>     $_POST["subtitle"],
-                'author'         =>     $_POST['author'],
-                'published'      =>     $_POST["published"],
-                'publisher'      =>     $_POST["publisher"],
-                'pages'          =>     $_POST['pages'],
-                'description'    =>     $_POST["description"],
-                'website'        =>     $_POST["website"]
+                'isbn' => $_POST['isbn'],
+                'title' => $_POST["title"],
+                'subtitle' => $_POST["subtitle"],
+                'author' => $_POST['author'],
+                'published' => $_POST["published"],
+                'publisher' => $_POST["publisher"],
+                'pages' => $_POST['pages'],
+                'description' => $_POST["description"],
+                'website' => $_POST["website"]
             );
 
             $array_data = App::get('Connect');
             foreach ($array_data as $key => $array_datum) {
                 if ($isbn == $array_datum['isbn']) {
-                    //update new book
+                    // Update new book
                     $array_data[$key] = $extra;
                 }
             }
@@ -99,5 +113,18 @@ class BookController
             file_put_contents('core/database/books.json', $finalBooks);
             return redirect('');
         }
+    }
+
+    public function reloadBook()
+    {
+        header('Content-Type: application/json');
+        // Get data
+        try {
+            $array_data = App::get('Connect');
+        } catch (Exception $e) {
+            throwException($e);
+        }
+        echo json_encode($array_data);
+        die();
     }
 }

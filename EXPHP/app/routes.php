@@ -6,3 +6,4 @@ $router->get('add', 'BookController@addBook');
 $router->post('add', 'BookController@addBook');
 $router->get('update', 'BookController@updateBook');
 $router->post('update', 'BookController@updateBook');
+$router->post('reload', 'BookController@reloadBook');
