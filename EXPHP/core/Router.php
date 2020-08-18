@@ -1,6 +1,8 @@
 <?php
 
-
+/**
+ * Class Router
+ */
 class Router
 {
     /**
@@ -17,6 +19,7 @@ class Router
      * Load a user's routes file.
      *
      * @param string $file
+     * @return Router
      */
     public static function load($file)
     {
@@ -54,6 +57,7 @@ class Router
      *
      * @param string $uri
      * @param string $requestType
+     * @return mixed
      */
     public function direct($uri, $requestType)
     {
@@ -71,13 +75,14 @@ class Router
      *
      * @param string $controller
      * @param string $action
+     * @return mixed
      */
     protected function callAction($controller, $action)
     {
         $controller = "$controller";
         $controller = new $controller;
 
-        if (! method_exists($controller, $action)) {
+        if (!method_exists($controller, $action)) {
             throw new Exception(
                 "{$controller} does not respond to the {$action} action."
             );

@@ -9,12 +9,22 @@ class BookController
 {
     protected $request;
 
+    /**
+     * Function bookList use to show all list book from file json
+     * Return to view show booklist
+     */
     public function bookList()
     {
         $books = App::get('Connect');
         return view('booklist', compact('books'));
     }
-
+    /**
+     * Function addBook use to add book in file data json
+     * Variable $create use to check is request add to show form add
+     * Method get is get data from file json
+     * Method POST is save data in file json
+     * Return to view show addbook
+     */
     public function addBook()
     {
         if (Request::method() == 'GET') {
@@ -65,7 +75,12 @@ class BookController
             return redirect('');
         }
     }
-
+    /**
+     * Function updateBook use to edit book in file data json
+     * Method get is get data from file json
+     * Method POST is save data changed in file json
+     * Return to view show addbook form update
+     */
     public function updateBook()
     {
         // Input
@@ -116,6 +131,9 @@ class BookController
         }
     }
 
+    /**
+     * Function reloadBook use to refesh data when update new
+     */
     public function reloadBook()
     {
         header('Content-Type: application/json');
