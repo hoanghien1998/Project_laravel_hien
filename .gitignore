@@ -16,6 +16,6 @@ yarn-error.log
 .env
 nbproject/*
 /dataworkers
-.data/
+.dbdata/
 .es-data/
 .composer/
