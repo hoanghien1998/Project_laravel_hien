@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/user-login', 'LoginController@getLogin');
+Route::get('/user-login', 'LoginController@getLogin')->name('user-login');
+;
 Route::post('/user-login', 'LoginController@postLogin');
 Route::get('/logout', 'LoginController@logout');
 
