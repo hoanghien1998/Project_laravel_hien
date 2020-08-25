@@ -13,9 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    phpinfo();
-    dd();
-    return view('welcome');
-});
+Route::get('/user-login', 'LoginController@getLogin');
+Route::post('/user-login', 'LoginController@postLogin');
+Route::get('/logout', 'LoginController@logout');
+
+
 Route::get('/hello', 'HelloController@index');
+
+Route::get('/user', 'LoginController@welcome');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'LoginController@welcome');
