@@ -37,7 +37,7 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        if (! $token = auth('api')->attempt($validator->validated())) {
+        if (!$token = auth('api')->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -109,11 +109,11 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
+     * @param string $token
      *
      * @return JsonResponse
      */
-    protected function createNewToken(String $token)
+    protected function createNewToken(string $token)
     {
         return response()->json([
             'access_token' => $token,
