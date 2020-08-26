@@ -12,9 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/user-login', 'LoginController@getLogin')->name('user-login');
-;
+// router for login normal
+Route::get('/user-login', 'LoginController@getLogin');
 Route::post('/user-login', 'LoginController@postLogin');
 Route::get('/logout', 'LoginController@logout');
 
@@ -27,3 +26,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'LoginController@welcome');
+
+// router for login api
+Route::get('/users', function () {
+    return view('login-api.login-api');
+});

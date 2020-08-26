@@ -2,6 +2,10 @@
 
 use Illuminate\Database\Seeder;
 
+/**
+ * Class DatabaseSeeder
+ * Use call UsersTableSeeder execute
+ */
 class DatabaseSeeder extends Seeder
 {
     /**

@@ -23,7 +23,8 @@ class AuthController extends Controller
     /**
      * Get a JWT via given credentials.
      *
-     * @param Request $request
+     * @param Request $request Login
+     *
      * @return JsonResponse
      */
     public function login(Request $request)
@@ -47,7 +48,8 @@ class AuthController extends Controller
     /**
      * Register a User.
      *
-     * @param Request $request
+     * @param Request $request register
+     *
      * @return JsonResponse
      */
     public function register(Request $request)
@@ -69,7 +71,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User successfully registered',
-            'user' => $user
+            'user' => $user,
         ], 201);
     }
 
@@ -109,7 +111,7 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param string $token
+     * @param string $token Create token new
      *
      * @return JsonResponse
      */

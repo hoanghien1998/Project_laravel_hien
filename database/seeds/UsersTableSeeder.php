@@ -3,6 +3,9 @@
 use App\User;
 use Illuminate\Database\Seeder;
 
+/**
+ * Class UsersTableSeeder insert 50 users at table users
+ */
 class UsersTableSeeder extends Seeder
 {
     /**
@@ -13,6 +16,5 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         factory(User::class, 50)->create();
-
     }
 }
