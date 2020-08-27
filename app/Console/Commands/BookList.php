@@ -6,7 +6,11 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
-// Read file books json to show all books in booklist
+/**
+ * Read file books json to show all books in booklist
+ *
+ * @package App\Console\Commands
+ */
 class BookList extends Command
 {
     /**
@@ -22,12 +26,6 @@ class BookList extends Command
      * @var string
      */
     protected $description = 'Command show all booklist';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
 
     /**
      * Execute the console command.

@@ -19,3 +19,4 @@ nbproject/*
 .dbdata/
 .es-data/
 .composer/
+.data

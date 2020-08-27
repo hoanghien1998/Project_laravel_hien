@@ -3,22 +3,22 @@ all: run
 start: run
 
 run:
-	docker-compose -f docker-compose.yml -p project1 up -d
+	docker-compose -f docker-compose.yml -p hien up -d
 
 stop:
-	docker-compose -f docker-compose.yml -p project1 kill
+	docker-compose -f docker-compose.yml -p hien kill
 
 destroy:
-	docker-compose -f docker-compose.yml -p project1 down
+	docker-compose -f docker-compose.yml -p hien down
 
 logs:
-	docker-compose -f docker-compose.yml -p project1 logs -f app
+	docker-compose -f docker-compose.yml -p hien logs -f app
 
 shell:
-	docker-compose -f docker-compose.yml -p project1 exec --user www app bash
+	docker-compose -f docker-compose.yml -p hien exec --user www app bash
 
 ip:
-	docker inspect webserver | grep \"IPAddress\"
+	docker inspect hien-web | grep \"IPAddress\"
 
 ipdb:
-	docker inspect db | grep \"IPAddress\"
+	docker inspect hien-db | grep \"IPAddress\"
