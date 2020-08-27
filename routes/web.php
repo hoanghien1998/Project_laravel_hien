@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user-login', 'LoginController@getLogin');
 Route::post('/user-login', 'LoginController@postLogin');
 Route::get('/logout', 'LoginController@logout');
-
+Route::get('/user', function () {
+    return view('login.user-pro');
+});
 
 Route::get('/hello', 'HelloController@index');
-
-Route::get('/user', 'LoginController@welcome');
 
 Auth::routes();
 

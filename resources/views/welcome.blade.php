@@ -70,11 +70,8 @@
             @auth
                 <a href="{{ url('/home') }}">Home</a>
             @else
-                <a href="{{ route('login') }}">Login</a>
+                <a href="{{ url('/user-login') }}">Login</a>
 
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}">Register</a>
-                @endif
             @endauth
         </div>
     @endif
@@ -83,7 +80,7 @@
         <div class="title m-b-md">
             Laravel
         </div>
-        <a href="{{ url('logout') }}" style="">logout</a>
+
         <div class="links">
             <a href="https://laravel.com/docs">Docs</a>
             <a href="https://laracasts.com">Laracasts</a>
