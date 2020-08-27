@@ -131,7 +131,7 @@
             <script type="text/javascript">
 
                 $(window).on('load', function () {
-                    const url = "http://proj1-web.service.docker/api/auth/user-profile";
+                    const url = "http://hien-web.service.docker/api/auth/user-profile";
                     const cookie = getCookie('access_token');
                     const token = "Bearer " + cookie;
 
@@ -159,7 +159,7 @@
                         $("#btnLogout").css("visibility", "visible");
                         $("#btnPro").css("visibility", "hidden");
 
-                        const url = "http://proj1-web.service.docker/api/auth/user-profile";
+                        const url = "http://hien-web.service.docker/api/auth/user-profile";
                         const cookie = getCookie('access_token');
                         const token = "Bearer " + cookie;
 
@@ -181,7 +181,7 @@
                     $("#loginFr").submit(function (event) {
 
                         event.preventDefault(); //prevent default action
-                        const url = "http://proj1-web.service.docker/api/auth/login";
+                        const url = "http://hien-web.service.docker/api/auth/login";
 
                         var form_data = new FormData(this); //Creates new FormData object
 
@@ -214,7 +214,7 @@
                         $("#inEmail").val("");
                         $("#inPass").val("");
 
-                        const url = "http://proj1-web.service.docker/api/auth/logout";
+                        const url = "http://hien-web.service.docker/api/auth/logout";
 
                         $.ajax({
                             url: url,

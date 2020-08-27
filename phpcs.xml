@@ -37,6 +37,7 @@
         <exclude-pattern>app/Providers/EventServiceProvider.php</exclude-pattern>
         <exclude-pattern>app/Providers/RouteServiceProvider.php</exclude-pattern>
         <exclude-pattern>app/Exceptions/Handler.php</exclude-pattern>
+        <exclude-pattern>app/Http/Kernel.php</exclude-pattern>
     </rule>
     <rule ref="MySource.Commenting.FunctionComment.TypeHintMissing">
         <exclude-pattern>app/Exceptions/Handler.php</exclude-pattern>

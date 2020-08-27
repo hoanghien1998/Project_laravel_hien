@@ -70,7 +70,7 @@
             @auth
                 <a href="{{ url('/home') }}">Home</a>
             @else
-                <a href="{{ url('/user-login') }}">Login</a>
+                <a href="{{ url('/users') }}">Login</a>
 
             @endauth
         </div>
