@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\NotificationSendMail;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -58,7 +59,11 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
+            'firstname' => 'required|string',
+            'lastname' => 'required|string',
+            'phone' => 'required|string|max:11|min:10',
+            'birthday' => 'required|date',
+            'gender' => 'required|string',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
         ]);
@@ -72,6 +77,8 @@ class AuthController extends Controller
             ['password' => bcrypt($request->password)]
         ));
 
+       // Mail::to("kimkim@gmail.com")->send(new RegisterSendMail($user));
+        $user->notify(new NotificationSendMail());
         return response()->json([
             'message' => 'User successfully registered',
             'user' => $user,

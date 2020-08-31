@@ -25,9 +25,15 @@ Route::get('/hello', 'HelloController@index');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/', 'LoginController@welcome');
+//Route::get('/', 'LoginController@welcome');
 
 // router for login api
-Route::get('/users', function () {
+Route::get('/', function () {
     return view('login-api.login-api');
+});
+
+// Router for register
+
+Route::get('/register', function () {
+    return view('register.register');
 });

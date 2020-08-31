@@ -67,7 +67,24 @@ services:
     networks:
       - app-network
 
+  maildev:
+    image: djfarrelly/maildev
+    container_name: hien-mail
+    hostname: hien-mail
+    ports: [25, 80]
+    environment:
+      MAILDEV_SMTP_PORT: 25
+      MAILDEV_WEB_PORT: 80
+    labels:
+      SERVICE_NAME: hien-mail
+      SERVICE_25_NAME: hien-mail
+      SERVICE_80_NAME: hien-mail
+    networks:
+      - app-network
 #Docker Networks
 networks:
   app-network:
     driver: bridge
+
+
+
