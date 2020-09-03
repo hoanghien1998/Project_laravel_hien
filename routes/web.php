@@ -37,3 +37,9 @@ Route::get('/', function () {
 Route::get('/register', function () {
     return view('register.register');
 });
+
+// Router for page cars
+
+Route::get('/listcar', function () {
+    return view('cars.cars');
+});

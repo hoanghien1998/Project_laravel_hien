@@ -35,3 +35,17 @@ Route::get('my-api', function (Request $request) {
 
     return response()->json(['Hello Laravel 7']);
 });
+
+/**
+ * Router group api car
+ */
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'car'
+], function ($app) {
+    $app->post('car', 'CarController@createCar');
+    $app->put('car/{id}', 'CarController@updateCar');
+
+    $app->delete('car/{id}', 'CarController@deleteCar');
+    $app->get('car', 'CarController@index');
+});
