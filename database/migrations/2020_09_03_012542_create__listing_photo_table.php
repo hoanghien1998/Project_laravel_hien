@@ -14,8 +14,9 @@ class CreateListingPhotoTable extends Migration
     public function up()
     {
         Schema::create('photos', function (Blueprint $table) {
-            $table->integer('listing')->unsigned();
-            $table->foreign('listing')->references('id')->on('cars');
+            $table->increments('id');
+            $table->integer('carId')->unsigned();
+            $table->foreign('carId')->references('id')->on('cars');
             $table->string('photo');
             $table->timestamps();
         });

@@ -10,7 +10,7 @@ class Photo extends Model
      * @var string[]
      */
     protected $fillable = [
-      'listing','photo'
+      'carId','photo'
     ];
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -30,5 +30,13 @@ class Photo extends Model
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    public  function transform(){
+        $data=[
+            'id'=>$this->id,
+            'carId'=>$this->carId,
+            'photo'=>$this->photo,
+        ];
+        return $data;
     }
 }

@@ -40,6 +40,6 @@ Route::get('/register', function () {
 
 // Router for page cars
 
-Route::get('/listcar', function () {
+Route::get('/list-car', function () {
     return view('cars.cars');
 });

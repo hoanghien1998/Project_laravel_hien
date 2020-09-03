@@ -43,8 +43,8 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'car'
 ], function ($app) {
-    $app->post('car', 'CarController@createCar');
-    $app->put('car/{id}', 'CarController@updateCar');
+    $app->post('create', 'CarController@createCar');
+    $app->post('update', 'CarController@updateCar');
 
     $app->delete('car/{id}', 'CarController@deleteCar');
     $app->get('car', 'CarController@index');

@@ -7,22 +7,48 @@ use App\Photo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use function GuzzleHttp\json_encode;
 
 class CarController extends Controller
 {
     public function createCar(Request $request)
     {
-        $car = Car::create($request->all());
-        $photo = Photo::create($request->all());
-//        $photo->dump($car->id)-> get(['listing']);
-//        dump($photo);
-        $photo->save();
-        return response()->json($car, $photo);
+        //input
+        $seat = $request->get('seat');
+        $startingPrice = $request->get('startingPrice');
+        $dueDate = $request->get('dueDate');
+        $carYear = $request->get('carYear');
+        $carModel = $request->get('carModel');
+        $carBody = $request->get('carBody');
+        $startBidTime = $request->get('startBidTime');
+        $bidDuration = $request->get('bidDuration');
+        $description = $request->get('description');
+        $photo = $request->get('photo');
+
+        $car = Car::create([
+            'seat'=>$seat,
+            'startingPrice'=>$startingPrice,
+            'dueDate'=>$dueDate,
+            'carYear'=>$carYear,
+            'carModel'=>$carModel,
+            'carBody'=>$carBody,
+            'startBidTime'=>$startBidTime,
+            'bidDuration'=>$bidDuration,
+            'description'=>$description,
+        ]);
+        $photo = Photo::create([
+            'carId'=>$car->id,
+            'photo'=>$photo,
+        ]);
+        return json_encode($car->transform());
+
+
     }
 
-    public function updateCar(Request $request, $id)
+    public function updateCar(Request $request)
     {
-        $car  = Car::find($id);
+        $photo=$request->get('photo');
+        $car  = Car::find($request->get('id'));
         $car->seat = $request->input('seat');
         $car->startingPrice = $request->input('startingPrice');
         $car->dueDate = $request->input('dueDate');
@@ -34,7 +60,15 @@ class CarController extends Controller
         $car->description = $request->input('description');
         $car->save();
 
-        return response()->json($car);
+            $photo = Photo::where([
+                'photo'=>$photo,
+            ])->first();
+            if (!empty($photo)){
+                $photo->update(['carId'=>$car->id]);
+            }
+
+
+        return json_encode($car->transform());
     }
     public function deleteCar($id)
     {
@@ -45,10 +79,14 @@ class CarController extends Controller
     }
     public function index()
     {
-
+$items=[];
         $cars  = Car::all();
-        $photos = Photo::all();
-
-        return response()->json($cars, $photos);
+foreach ($cars as $car){
+    $items=$car->transform();
+}
+$data=[
+    'items'=>$items
+];
+        return response()->json($data);
     }
 }

@@ -35,4 +35,32 @@ class Car extends Model
     {
         return [];
     }
+    public  function transform(){
+        $data=[
+            'id'=>$this->id,
+            'seat'=>$this->seat,
+            'startingPrice'=>$this->startingPrice,
+            'dueDate'=>$this->dueDate,
+            'carYear'=>$this->carYear,
+            'carModel'=>$this->carModel,
+            'carBody'=>$this->carBody,
+            'startBidTime'=>$this->startBidTime,
+            'bidDuration'=>$this->bidDuration,
+            'description'=>$this->description,
+        ];
+        $data['photos']=$this->photos();
+        return $data;
+    }
+    public function photos(){
+        $photos=Photo::where([
+            'carId'=>$this->id,
+        ])->get();
+        $data=[];
+        if (!empty($photos)){
+            foreach ($photos as $photo){
+                $data[]=$photo->transform();
+            }
+        }
+        return $data;
+    }
 }
