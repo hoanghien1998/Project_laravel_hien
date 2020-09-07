@@ -5,88 +5,103 @@ namespace App\Http\Controllers;
 use App\Car;
 use App\Photo;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use function GuzzleHttp\json_encode;
 
 class CarController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * Add new car
+     */
     public function createCar(Request $request)
     {
         //input
         $seat = $request->get('seat');
-        $startingPrice = $request->get('startingPrice');
+        $model = $request->get('model');
+        $body = $request->get('body');
+        $year = $request->get('year');
+        $price = $request->get('price');
         $dueDate = $request->get('dueDate');
-        $carYear = $request->get('carYear');
-        $carModel = $request->get('carModel');
-        $carBody = $request->get('carBody');
-        $startBidTime = $request->get('startBidTime');
-        $bidDuration = $request->get('bidDuration');
+        $startBid = $request->get('startBid');
+        $endBid = $request->get('endBid');
         $description = $request->get('description');
-        $photo = $request->get('photo');
-
         $car = Car::create([
-            'seat'=>$seat,
-            'startingPrice'=>$startingPrice,
-            'dueDate'=>$dueDate,
-            'carYear'=>$carYear,
-            'carModel'=>$carModel,
-            'carBody'=>$carBody,
-            'startBidTime'=>$startBidTime,
-            'bidDuration'=>$bidDuration,
-            'description'=>$description,
+            'seat' => $seat,
+            'model' => $model,
+            'body' => $body,
+            'year' => $year,
+            'price' => $price,
+            'dueDate' => $dueDate,
+            'startBid' => $startBid,
+            'endBid' => $endBid,
+            'description' => $description,
         ]);
+
+        $name = $request->image->getClientOriginalName();
+        $request->image->move(public_path('image'), $name);
+
         $photo = Photo::create([
-            'carId'=>$car->id,
-            'photo'=>$photo,
+            'carId' => $car->id,
+            'photo' => $name,
         ]);
-        return json_encode($car->transform());
 
-
+        return response()->json($car->transform());
     }
 
-    public function updateCar(Request $request)
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * Update data for car
+     */
+    public function updateCar(Request $request, $id)
     {
-        $photo=$request->get('photo');
-        $car  = Car::find($request->get('id'));
-        $car->seat = $request->input('seat');
-        $car->startingPrice = $request->input('startingPrice');
-        $car->dueDate = $request->input('dueDate');
-        $car->carYear = $request->input('carYear');
-        $car->carModel = $request->input('carModel');
-        $car->carBody = $request->input('carBody');
-        $car->startBidTime = $request->input('startBidTime');
-        $car->bidDuration = $request->input('bidDuration');
-        $car->description = $request->input('description');
+
+        $car = Car::find($id);
+        $car->update($request->all());
         $car->save();
+        return response()->json($car);
 
-            $photo = Photo::where([
-                'photo'=>$photo,
-            ])->first();
-            if (!empty($photo)){
-                $photo->update(['carId'=>$car->id]);
-            }
-
-
-        return json_encode($car->transform());
+//        $photo = $request->get('photo');
+//        $photo = Photo::where([
+//            'photo' => $photo,
+//        ])->first();
+//        if (!empty($photo)) {
+//            $photo->update(['carId' => $car->id]);
+//        }
+//        return json_encode($car->transform());
     }
+
     public function deleteCar($id)
     {
-        $car  = Car::find($id);
+        $car = Car::find($id);
         $car->delete();
 
         return response()->json('Removed successfully.');
     }
+
+    /**
+     * @return JsonResponse
+     * Show all list information car
+     */
     public function index()
     {
-$items=[];
-        $cars  = Car::all();
-foreach ($cars as $car){
-    $items=$car->transform();
-}
-$data=[
-    'items'=>$items
-];
-        return response()->json($data);
+
+        return response()->json(Car::get(), 200);
+    }
+
+    /**
+     * @param $carId
+     * @return JsonResponse
+     * Show images of car according to carId
+     */
+    public function ListImages($carId)
+    {
+        $photo = Photo::find($carId);
+        return response()->json($photo, 200);
     }
 }

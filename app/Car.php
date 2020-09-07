@@ -3,17 +3,18 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Car extends Model
 {
     /**
      * @var string[]
      */
-    protected $fillable =[
-        'seat', 'startingPrice',
-        'dueDate', 'carYear', 'carModel',
-        'carBody', 'startBidTime',
-        'bidDuration', 'description'
+    protected $fillable = [
+        'seat', 'model',
+        'body', 'year', 'price',
+        'dueDate', 'startBid',
+        'endBid', 'description'
     ];
 
     /**
@@ -35,32 +36,53 @@ class Car extends Model
     {
         return [];
     }
-    public  function transform(){
-        $data=[
-            'id'=>$this->id,
-            'seat'=>$this->seat,
-            'startingPrice'=>$this->startingPrice,
-            'dueDate'=>$this->dueDate,
-            'carYear'=>$this->carYear,
-            'carModel'=>$this->carModel,
-            'carBody'=>$this->carBody,
-            'startBidTime'=>$this->startBidTime,
-            'bidDuration'=>$this->bidDuration,
-            'description'=>$this->description,
+
+    /**
+     * Format object to array
+     * @return array
+     */
+    public function transform()
+    {
+        $data = [
+            'id' => $this->id,
+            'seat' => $this->seat,
+            'model' => $this->model,
+            'body' => $this->body,
+            'year' => $this->year,
+            'price' => $this->price,
+            'dueDate' => $this->dueDate,
+            'startBid' => $this->startBid,
+            'endBid' => $this->endBid,
+            'description' => $this->description,
         ];
-        $data['photos']=$this->photos();
+        $data['photos'] = $this->photos();
         return $data;
     }
-    public function photos(){
-        $photos=Photo::where([
-            'carId'=>$this->id,
+
+    /**
+     * Format data photo
+     * @return array
+     */
+    public function photos()
+    {
+        $photos = Photo::where([
+            'carId' => $this->id,
         ])->get();
-        $data=[];
-        if (!empty($photos)){
-            foreach ($photos as $photo){
-                $data[]=$photo->transform();
+        $data = [];
+        if (!empty($photos)) {
+            foreach ($photos as $photo) {
+                $data[] = $photo->transform();
             }
         }
         return $data;
+    }
+
+    /**
+     * Return all images according to carId
+     * @return HasMany
+     */
+    public function image()
+    {
+        return $this->hasMany('App\Photo', 'carId');
     }
 }

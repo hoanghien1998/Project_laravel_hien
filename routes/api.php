@@ -44,8 +44,9 @@ Route::group([
     'prefix' => 'car'
 ], function ($app) {
     $app->post('create', 'CarController@createCar');
-    $app->post('update', 'CarController@updateCar');
-
+    $app->post('update/{id}', 'CarController@updateCar');
+    $app->get('update/{id}', 'CarController@updateCar');
     $app->delete('car/{id}', 'CarController@deleteCar');
-    $app->get('car', 'CarController@index');
+    $app->get('list-car', 'CarController@index');
+    $app->get('list-images/{id}', 'CarController@ListImages');
 });

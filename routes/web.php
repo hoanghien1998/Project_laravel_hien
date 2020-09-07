@@ -23,9 +23,7 @@ Route::get('/user', function () {
 Route::get('/hello', 'HelloController@index');
 
 Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
-//Route::get('/', 'LoginController@welcome');
 
 // router for login api
 Route::get('/', function () {
@@ -40,6 +38,6 @@ Route::get('/register', function () {
 
 // Router for page cars
 
-Route::get('/list-car', function () {
-    return view('cars.cars');
+Route::get('/car', function () {
+    return view('cars.add-car');
 });
