@@ -59,6 +59,8 @@ class CarController extends Controller
 
     /**
      * @param Request $request
+     * UpdateCar use 2 method get and post. If method GET to get data into the input, If method POST to update data all field in table cars,
+     * table photos to delete old image then add new image.
      * @param $id
      * @return JsonResponse
      * Update data for car
