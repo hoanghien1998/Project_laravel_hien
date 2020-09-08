@@ -1,12 +1,12 @@
 @extends('layouts.index')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
-            <button class="btn btn-danger" type="button" id="btnList" style="visibility: hidden">Show list car</button>
+            <button class="btn btn-danger" type="button" id="btnList" style="display: none">Show list car</button>
         </div>
         <div class="row">
-            <div class="col-lg-9 col-md-9 listCar">
+            <div class="col-lg-12 col-md-12 listCar">
                 <h2 style="text-align:center ">List cars</h2>
                 <button class="btn btn-success" value="add" id="btnAdd">Add car</button>
                 <table class="table">
@@ -31,7 +31,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-lg-3 col-md-3 add" style="visibility: hidden">
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 add" style="display: none">
                 <h2>Add car form</h2>
                 <form method="post" id="addCarFrm" enctype="multipart/form-data">
                     @csrf
@@ -89,14 +91,15 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-md-6">@include('cars.update-cars')</div>
-            <div class="col-lg-6 col-md-6">@include('cars.details')</div>
+            <div class="col-lg-12 col-md-12">@include('cars.details')</div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12">@include('cars.update-cars')</div>
         </div>
     </div>
 @endsection
 
 @section('script')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(window).on('load', function () {
             const url = "http://hien-web.service.docker/api/car/list-car";
@@ -118,28 +121,28 @@
                     var $item = response[i];
 
                     data += "<tr>"
-                        + "<td>" + $item['id'] + "</td>"
-                        + "<td>" + $item['status'] + "</td>"
-                        + "<td>" + $item['seat'] + "</td>"
-                        + "<td>" + $item['model'] + "</td>"
-                        + "<td>" + $item['body'] + "</td>"
-                        + "<td>" + $item['year'] + "</td>"
-                        + "<td>" + $item['price'] + "</td>"
-                        + "<td>" + $item['dueDate'] + "</td>"
-                        + "<td>" + $item['startBid'] + "</td>"
-                        + "<td>" + $item['endBid'] + "</td>"
-                        + "<td>" + $item['description'] + "</td>"
-                        + "<td>" + "<button type=\"button\" class=\"btn btn-success\" onclick='DetailsCar(" + $item['id'] + ")'>Details</button>"
-                        + "<button type=\"button\" class=\"btn btn-warning\" onclick='updateCar(" + $item['id'] + ")'> Update</button>" + "</td>"
+                        + "<td>" + $item.id + "</td>"
+                        + "<td>" + $item.status + "</td>"
+                        + "<td>" + $item.seat + "</td>"
+                        + "<td>" + $item.model + "</td>"
+                        + "<td>" + $item.body + "</td>"
+                        + "<td>" + $item.year + "</td>"
+                        + "<td>" + $item.price + "</td>"
+                        + "<td>" + $item.dueDate + "</td>"
+                        + "<td>" + $item.startBid + "</td>"
+                        + "<td>" + $item.endBid + "</td>"
+                        + "<td>" + $item.description + "</td>"
+                        + "<td>" + "<button type=\"button\" class=\"btn btn-success\" onclick='DetailsCar(" + $item.id + ")'>Details</button>"
+                        + "<button type=\"button\" class=\"btn btn-warning\" onclick='updateCar(" + $item.id + ")'> Update</button>" + "</td>"
                 }
                 $('#tbbody').html(data);
             });
         });
 
         $("#btnAdd").click(function () {
-            $("#details").css("visibility", "hidden");
-            $(".add").css("visibility", "visible");
-            $(".listCar").css("visibility", "hidden");
+            $("#details").hide();
+            $(".add").show();
+            $(".listCar").hide();
             // Add car
             $("#addCarFrm").submit(function (event) {
                 event.preventDefault(); //prevent default action
@@ -160,8 +163,8 @@
                 }).done(function (response) {
                     console.log(response);
                     alert('Add car information successfully!!!!');
-                    $(".add").css("visibility", "hidden");
-                    $("#btnList").css("visibility", "visible");
+                    $(".add").hide();
+                    $("#btnList").show();
 
                 }).fail(function (error) {
 
@@ -181,7 +184,7 @@
 
         // show list car
         $("#btnList").click(function () {
-            $(".listCar").css("visibility", "visible");
+            $(".listCar").show();
             const url = "http://hien-web.service.docker/api/car/list-car";
             var cookie = getCookie('access_token');
             var token = "Bearer " + cookie;
@@ -201,19 +204,19 @@
                     var $item = response[i];
 
                     data += "<tr>"
-                        + "<td>" + $item['id'] + "</td>"
-                        + "<td>" + $item['status'] + "</td>"
-                        + "<td>" + $item['seat'] + "</td>"
-                        + "<td>" + $item['model'] + "</td>"
-                        + "<td>" + $item['body'] + "</td>"
-                        + "<td>" + $item['year'] + "</td>"
-                        + "<td>" + $item['price'] + "</td>"
-                        + "<td>" + $item['dueDate'] + "</td>"
-                        + "<td>" + $item['startBid'] + "</td>"
-                        + "<td>" + $item['endBid'] + "</td>"
-                        + "<td>" + $item['description'] + "</td>"
-                        + "<td>" + "<button type=\"button\" class=\"btn btn-success\" onclick='DetailsCar(" + $item['id'] + ")'>Details</button>"
-                        + "<button type=\"button\" class=\"btn btn-warning\" onclick='updateCar(" + $item['id'] + ")'> Update</button>" + "</td>"
+                        + "<td>" + $item.id + "</td>"
+                        + "<td>" + $item.status + "</td>"
+                        + "<td>" + $item.seat + "</td>"
+                        + "<td>" + $item.model + "</td>"
+                        + "<td>" + $item.body + "</td>"
+                        + "<td>" + $item.year + "</td>"
+                        + "<td>" + $item.price + "</td>"
+                        + "<td>" + $item.dueDate + "</td>"
+                        + "<td>" + $item.startBid + "</td>"
+                        + "<td>" + $item.endBid + "</td>"
+                        + "<td>" + $item.description + "</td>"
+                        + "<td>" + "<button type=\"button\" class=\"btn btn-success\" onclick='DetailsCar(" + $item.id + ")'>Details</button>"
+                        + "<button type=\"button\" class=\"btn btn-warning\" onclick='updateCar(" + $item.id + ")'> Update</button>" + "</td>"
                 }
                 $('#tbbody').html(data);
             });
@@ -222,7 +225,7 @@
 
         // Show all photos carId
         function DetailsCar(carId) {
-            $("#details").css("visibility", "visible");
+            $("#details").show();
             const url = "http://hien-web.service.docker/api/car/list-images/";
             var cookie = getCookie('access_token');
             var token = "Bearer " + cookie;
@@ -235,19 +238,23 @@
                 headers: {"Authorization": token}
             }).done(function (response) {
                 var dataImage = "";
+
+
                 dataImage += "<tr>"
                     + "<td>" + response['carId'] + "</td>"
                     + "<td>" + '<img alt="" src="image/' + response['photo'] + '"/>' + "</td></tr>"
 
+
                 $('#tbbodyImage').html(dataImage);
+                $("#btnList").hide();
             });
         }
 
         // show car to update car
         function updateCar(car_id) {
-            $("#details").css("visibility", "hidden");
-            $("#update").css("visibility", "visible");
-            $(".listCar").css("visibility", "hidden");
+            $("#details").hide();
+            $("#update").show();
+            $(".listCar").hide();
             const url = "http://hien-web.service.docker/api/car/update/";
             var cookie = getCookie('access_token');
             var token = "Bearer " + cookie;
@@ -267,6 +274,8 @@
                 $("#startBid").val(response['startBid']);
                 $("#endBid").val(response['endBid']);
                 $("#description").text(response['description']);
+                //$("#photo").append("<img alt='' src='/" + response['photo'] + "'>");
+              $("#photo").val(response['photo']);
 
             });
 
@@ -292,8 +301,8 @@
 
                     console.log(response);
                     alert('Update car information successfully!!!!');
-                    $("#update").css("visibility", "hidden");
-                    $("#btnList").css("visibility", "visible");
+                    $("#update").hide();
+                    $("#btnList").show();
                 });
             });
         }

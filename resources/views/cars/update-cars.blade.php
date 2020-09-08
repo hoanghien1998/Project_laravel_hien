@@ -1,4 +1,4 @@
-<div style="visibility: hidden" id="update">
+<div style="display: none" id="update">
     <h2>Edit car form</h2>
     <form method="post" id="updateCarFrm" enctype="multipart/form-data">
         <div class="form-group">
@@ -36,6 +36,10 @@
         <div class="form-group">
             <label for="description">Description:</label>
             <textarea name="description" class="form-control" placeholder="Enter car_description" id="description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="upload">Upload Image:</label>
+            <input type="file" class="form-control" name="photo">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

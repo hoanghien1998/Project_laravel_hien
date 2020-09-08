@@ -55,7 +55,7 @@ class Car extends Model
             'endBid' => $this->endBid,
             'description' => $this->description,
         ];
-        $data['photos'] = $this->photos();
+        $data['photo'] = $this->photo();
         return $data;
     }
 
@@ -63,18 +63,16 @@ class Car extends Model
      * Format data photo
      * @return array
      */
-    public function photos()
+    public function photo()
     {
-        $photos = Photo::where([
+        $photo = Photo::where([
             'carId' => $this->id,
-        ])->get();
-        $data = [];
-        if (!empty($photos)) {
-            foreach ($photos as $photo) {
-                $data[] = $photo->transform();
-            }
+        ])->first();
+        if (!empty($photo)) {
+            return $photo->photo;
+        } else {
+            return null;
         }
-        return $data;
     }
 
     /**

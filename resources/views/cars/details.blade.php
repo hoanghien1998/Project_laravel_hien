@@ -1,4 +1,4 @@
-<div style="visibility: hidden" id="details">
+<div style="display: none" id="details">
     <h2>List Car Images</h2>
     <table class="table table-bordered table-hover">
         <thead>
