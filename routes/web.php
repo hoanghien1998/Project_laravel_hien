@@ -14,13 +14,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
-
-// router for login api
+//router for dashboard
 Route::get('/', function () {
-    return view('login-api.login-api');
+    return view('Dashboard.dashboard');
 });
 
+// router for login api
+Route::get('/login', function () {
+    return view('login-api.login-api');
+});
 
 // Router for page cars
 
