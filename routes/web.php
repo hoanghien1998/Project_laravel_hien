@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 //router for dashboard
 Route::get('/', function () {
-    return view('Dashboard.dashboard');
+    return view('home');
 });
 
 // router for login api

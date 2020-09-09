@@ -3,10 +3,15 @@
 @section('content')
 
     <div class="container">
-
         <div class="row">
-
-            <div class="col-md-4 login-sec" style="visibility: hidden">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-success" id="btnPro" style="display: none">Your Profile</button>
+                <button type="button" class="btn btn-danger" id="btnLogout" style="display: none">Logout</button>
+                <button type="button" class="btn btn-success" id="btnLogin" style="display: none">Login</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 login-sec" style="display: none">
                 <h2 class="text-center">Login Now</h2>
                 @if (count($errors) >0)
                     <ul>
@@ -39,16 +44,149 @@
                             <input type="checkbox" class="form-check-input">
                             <small>Remember Me</small>
                         </label>
-                        <button id="btnLogin" type="submit" value="login" class="btn btn-login float-right">Login</button>
+                        <button id="btnLogin" type="submit" value="login" class="btn btn-login float-right">Login
+                        </button>
                     </div>
 
                     <div class="form-group">
                         <label style="color: #8b0000">Create an account if you do not have an account??</label>
-                        <button id="btnRegister" type="submit" value="register" class="btn btn-login float-right">Register</button>
+                        <button id="btnRegister" type="submit" value="register" class="btn btn-login float-right">
+                            Register
+                        </button>
                     </div>
 
                 </form>
                 <div class="copy-text">Created with <i class="fa fa-heart"></i> by <a href="http://grafreez.com">Grafreez.com</a>
+                </div>
+            </div>
+            <div class="col-md-4 profile" style="display: none">
+                <h1 style="text-align: center; margin-top: 5px">Your Profile</h1>
+                <form method="post" action="">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="text-uppercase">First name</label>
+                                <input type="text" class="form-control" placeholder="" name="first_name"
+                                       id="first_name">
+
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="text-uppercase">Last name</label>
+                                <input type="text" class="form-control" placeholder="" name="last_name" id="last_name">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="text-uppercase">Phone number</label>
+                                <input type="text" class="form-control" placeholder="" name="phone" id="phone">
+
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="text-uppercase">Birthday</label>
+                                <input type="text" class="form-control" placeholder="" name="birthday" id="birthday">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="text-uppercase">Email</label>
+                                <input type="text" class="form-control" placeholder="" name="email" id="email">
+
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="text-uppercase">Gender</label>
+                                <input type="text" class="form-control" placeholder="" name="gender" id="gender">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-md-4 centered-form" style="display: none">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" style="text-align: center">Please sign up</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form method="post" role="form" id="registerFrm">
+                            @csrf
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="firstname" id="firstname" class="form-control input-sm"
+                                               placeholder="First Name">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="lastname" id="lastname" class="form-control input-sm"
+                                               placeholder="Last Name">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="phone" id="phone" class="form-control input-sm"
+                                               placeholder="Phone number">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="gender" id="gender" class="form-control input-sm"
+                                               placeholder="Male or female">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="email" name="email" id="email" class="form-control input-sm"
+                                               placeholder="Email Address">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="date" name="birthday" id="birthday" class="form-control input-sm">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="password" name="password" id="password"
+                                               class="form-control input-sm" placeholder="Password">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="password" name="password_confirmation" id="password_confirmation"
+                                               class="form-control input-sm" placeholder="Confirm Password">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="submit" value="Register" class="btn btn-info btn-block" id="btnRegister">
+
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -103,138 +241,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-6 profile" style="visibility: hidden">
-                <h1 style="text-align: center; margin-top: 5px">Your Profile</h1>
-                <form method="post" action="">
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1" class="text-uppercase">First name</label>
-                            <input type="text" class="form-control" placeholder="" name="first_name" id="first_name">
-
-                        </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1" class="text-uppercase">Last name</label>
-                                <input type="text" class="form-control" placeholder="" name="last_name" id="last_name">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1" class="text-uppercase">Phone number</label>
-                                <input type="text" class="form-control" placeholder="" name="phone" id="phone">
-
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1" class="text-uppercase">Birthday</label>
-                                <input type="text" class="form-control" placeholder="" name="birthday" id="birthday">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1" class="text-uppercase">Email</label>
-                                <input type="text" class="form-control" placeholder="" name="email" id="email">
-
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1" class="text-uppercase">Gender</label>
-                                <input type="text" class="form-control" placeholder="" name="gender" id="gender">
-
-                            </div>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-
-            <div class="col-md-6 centered-form" style="visibility: hidden">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title" style="text-align: center">Please sign up</h3>
-                        </div>
-                        <div class="panel-body">
-                            <form method="post" role="form" id="registerFrm">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" name="firstname" id="firstname" class="form-control input-sm" placeholder="First Name">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" name="lastname" id="lastname" class="form-control input-sm" placeholder="Last Name">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" name="phone" id="phone" class="form-control input-sm" placeholder="Phone number">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" name="gender" id="gender" class="form-control input-sm" placeholder="Male or female">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <input type="date" name="birthday" id="birthday" class="form-control input-sm">
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Confirm Password">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <input type="submit" value="Register" class="btn btn-info btn-block" id="btnRegister">
-
-                            </form>
-                        </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <button type="button" class="btn btn-success" id="btnPro" style="visibility: hidden">Your Profile</button>
-            <button type="button" class="btn btn-danger" id="btnLogout" style="visibility: hidden">Logout</button>
-            <button type="button" class="btn btn-success" id="btnLogin" style="visibility: hidden">Login</button>
-        </div>
         @endsection
 
         @section('script')
@@ -254,8 +260,8 @@
                         headers: {"Authorization": token}
                     }).done(function (response) { //
 
-                        $(".profile").css("visibility", "visible");
-                        $("#btnLogout").css("visibility", "visible");
+                        $(".profile").show();
+                        $("#btnLogout").show();
 
                         $("#first_name").val(response['firstname']);
                         $("#last_name").val(response['lastname']);
@@ -265,15 +271,15 @@
                         $("#email").val(response['email']);
 
                     }).fail(function () {
-                        $(".login-sec").css("visibility", "visible");
+                        $(".login-sec").show();
                     });
                 });
 
                 $(function () {
                     $("#btnPro").click(function () {
-                        $(".profile").css("visibility", "visible");
-                        $("#btnLogout").css("visibility", "visible");
-                        $("#btnPro").css("visibility", "hidden");
+                        $(".profile").show();
+                        $("#btnLogout").show();
+                        $("#btnPro").hide();
 
                         const url = "http://hien-web.service.docker/api/auth/user-profile";
                         const cookie = getCookie('access_token');
@@ -298,9 +304,9 @@
                         });
                     });
 
-                    $('#registerFrm').submit(function (event){
+                    $('#registerFrm').submit(function (event) {
                         event.preventDefault();
-                        const url ="http://hien-web.service.docker/api/auth/register";
+                        const url = "http://hien-web.service.docker/api/auth/register";
 
                         var request_method = $(this).attr("method");
                         var form_data = new FormData(this);
@@ -314,13 +320,13 @@
                             processData: false
                         }).done(function (response) {
                             alert(response['message']);
-                            $(".login-sec").css("visibility", "visible");
-                            $(".centered-form").css("visibility", "hidden");
+                            $(".login-sec").show();
+                            $(".centered-form").hide();
 
                         });
                     });
 
-                    $("#btnRegister").click( function (){
+                    $("#btnRegister").click(function () {
 
                     });
 
@@ -342,12 +348,12 @@
 
                             var token = response['access_token'];
                             setCookie('access_token', token, 1);
-                            $("#btnPro").css("visibility", "visible");
-                            $(".login-sec").css("visibility", "hidden");
+                            $("#btnPro").show();
+                            $(".login-sec").hide();
 
                         }).fail(function () {
-                            $(".centered-form").css("visibility", "visible");
-                            $(".login-sec").css("visibility", "hidden");
+                            $(".centered-form").show();
+                            $(".login-sec").hide();
                         });
                     });
 
@@ -357,9 +363,9 @@
                         var token = "Bearer " + cookie;
 
 
-                        $(".login-sec").css("visibility", "visible");
-                        $(".profile").css("visibility", "hidden");
-                        $("#btnLogout").css("visibility", "hidden");
+                        $(".login-sec").show();
+                        $(".profile").hide();
+                        $("#btnLogout").hide();
                         $("#inEmail").val("");
                         $("#inPass").val("");
 

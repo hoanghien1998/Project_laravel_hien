@@ -1,23 +1,29 @@
-@extends('layouts.app')
-
+@extends('layouts.layouts')
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
-
-                    <div class="card-body">
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
-
-                        {{ __('You are logged in!') }}
-                    </div>
-                </div>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="http://hien-web.service.docker/">WebSite Bid Cars</a>
             </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="http://hien-web.service.docker/car">List cars</a></li>
+                <li><a href="#">My Bid</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" action="/action_page.php">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://hien-web.service.docker/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
         </div>
-    </div>
+    </nav>
+
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+
 @endsection

@@ -29,24 +29,16 @@ Route::group([
 });
 
 /**
- * Router test api when use cors
- */
-Route::get('my-api', function (Request $request) {
-
-    return response()->json(['Hello Laravel 7']);
-});
-
-/**
  * Router group api car
  */
 Route::group([
     'middleware' => 'api',
     'prefix' => 'car'
 ], function ($app) {
-    $app->post('create', 'CarController@createCar');
-    $app->post('update/{id}', 'CarController@updateCar');
-    $app->get('update/{id}', 'CarController@updateCar');
-    $app->delete('car/{id}', 'CarController@deleteCar');
+    $app->post('create', 'CarController@create');
+    $app->post('update/{id}', 'CarController@update');
+    $app->get('update/{id}', 'CarController@update');
+    $app->delete('delete/{id}', 'CarController@delete');
     $app->get('list-car', 'CarController@index');
-    $app->get('list-images/{id}', 'CarController@ListImages');
+    $app->get('list-images/{id}', 'CarController@ShowImages');
 });

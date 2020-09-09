@@ -32,18 +32,4 @@ class Photo extends Model
     {
         return [];
     }
-
-    /**
-     * Transform object to array
-     * @return array
-     */
-    public function transform()
-    {
-        $data = [
-            'id' => $this->id,
-            'carId' => $this->carId,
-            'photo' => $this->photo,
-        ];
-        return $data;
-    }
 }

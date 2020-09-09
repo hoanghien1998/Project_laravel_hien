@@ -19,13 +19,13 @@ use Validator;
 class CarController extends Controller
 {
     /**
+     * Add new car.
+     * Get input from user to create information for table cars and table photos according to id.
+     * Return response for user
      * @param Request $request
      * @return JsonResponse
-     * Add new car
-     * Get input from user to create information for table cars and table photos according to id
-     * Return response for user
      */
-    public function createCar(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'seat' => 'required|integer|min:4',
@@ -49,7 +49,7 @@ class CarController extends Controller
         $name = $request->image->getClientOriginalName();
         $request->image->move(public_path('image'), $name);
 
-        $photo = Photo::create([
+        Photo::create([
             'carId' => $car->id,
             'photo' => $name,
         ]);
@@ -58,56 +58,67 @@ class CarController extends Controller
     }
 
     /**
+     * Check validation before save new input into data.
+     * Update data for car
      * @param Request $request
-     * UpdateCar use 2 method get and post. If method GET to get data into the input,
-     * If method POST to update data all field in table cars,
-     * table photos to delete old image then add new image.
      * @param $id
      * @return JsonResponse
-     * Update data for car
+     *
      */
-    public function updateCar(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        if ($_SERVER['REQUEST_METHOD'] == "GET") {
-            $car = Car::find($id);
-            return response()->json($car->transform());
-        } else {
-            $car = Car::find($id);
+        $car = Car::find($id);
 
-            #region delete old Image
-            Photo::where('carId', $car->id)->delete();
-            #endregion
-            $car->update($request->all());
+        if ($request->isMethod('post')) {
+            $validator = Validator::make($request->all(), [
+                'seat' => 'required|integer|min:4',
+                'model' => 'required|string',
+                'body' => 'required|string',
+                'year' => 'required|numeric',
+                'price' => 'required|numeric',
+                'dueDate' => 'required|date',
+                'startBid' => 'required|string',
+                'endBid' => 'required|string',
+                'description' => 'required|string',]);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
 
-            #region add new Image
-            //Todo
-            $name = $request->photo->getClientOriginalName();
-            $request->photo->move(public_path('image'), $name);
-            $photo = Photo::create([
-                'carId' => $car->id,
-                'photo' => $name,
-            ]);
-            #endregion
+            Car::where('id', $id)->update(array_merge(
+                $validator->validated()
+            ));
+            $photo = Photo::where('carId', $car->_id)->first();
+            if ($request->hasFile('photo')) {
+                $file = $request->file('photo');
+                $name = time() . '-' . $file->getClientOriginalName();
+                $file->move(public_path('image'), $name);
+                $photo->file= $name;
+            }
+
+            $photo->save();
             return response()->json($car->transform());
         }
+        return response()->json($car->transform());
     }
 
     /**
+     * Delete car according to id, first delete image, after delete car
      * @param $id
-     * Delete car according to id
+     *
      * @return JsonResponse
      */
-    public function deleteCar($id)
+    public function delete($id)
     {
         $car = Car::find($id);
+        Photo::where('carId', $car->id)->delete();
         $car->delete();
 
         return response()->json('Removed successfully.');
     }
 
     /**
-     * @return JsonResponse
      * Show all list information car
+     * @return JsonResponse
      */
     public function index()
     {
@@ -116,11 +127,12 @@ class CarController extends Controller
     }
 
     /**
-     * @param $carId
-     * @return JsonResponse
      * Show images of car according to carId
+     * @param $carId
+     *
+     * @return JsonResponse
      */
-    public function ListImages($carId)
+    public function ShowImages($carId)
     {
         $photo = Photo::find($carId);
         return response()->json($photo, 200);

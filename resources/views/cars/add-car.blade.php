@@ -254,6 +254,7 @@
         function updateCar(car_id) {
             $("#details").hide();
             $("#update").show();
+            $("#btnList").hide();
             $(".listCar").hide();
             const url = "http://hien-web.service.docker/api/car/update/";
             var cookie = getCookie('access_token');
