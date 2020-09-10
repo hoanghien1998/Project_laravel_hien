@@ -167,7 +167,7 @@ class CarController extends Controller
      */
     public function ShowImages($carId)
     {
-        $photo = Photo::where('carId', $carId);
+        $photo = Photo::where('carId', $carId)->pluck('photo');
         return response()->json($photo, 200);
     }
 

@@ -81,7 +81,11 @@
                     </div>
                     <div class="form-group">
                         <label for="upload">Upload Image:</label>
-                        <input type="file" class="form-control" name="image[]" multiple id="images">
+                        <input type="file" class="form-control" name="images[]" multiple id="images">
+                        <div style="clear:both"></div>
+                        <br />
+                        <br />
+                        <div id="uploaded_images"></div>
                     </div>
                     <button type="submit" class="btn btn-success">Submit</button>
                 </form>
@@ -139,47 +143,96 @@
             });
         });
 
-        $("#btnAdd").click(function () {
-            $("#details").hide();
-            $(".add").show();
-            $(".listCar").hide();
-            // Add car
-            $("#addCarFrm").submit(function (event) {
-                event.preventDefault(); //prevent default action
-                const url = "http://hien-web.service.docker/api/car/create";
-                var cookie = getCookie('access_token');
-                var token = "Bearer " + cookie;
+        $(function () {
+            $("#btnAdd").click(function () {
+                $("#details").hide();
+                $(".add").show();
+                $(".listCar").hide();
+                // Add car
+                $("#addCarFrm").submit(function (event) {
+                    event.preventDefault(); //prevent default action
+                    const url = "http://hien-web.service.docker/api/car/create";
+                    var cookie = getCookie('access_token');
+                    var token = "Bearer " + cookie;
 
-                var form_data = new FormData(this); //Creates new FormData object
+                    var form_data = new FormData(this); //Creates new FormData object
 
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    headers: {"Authorization": token},
-                    data: form_data,
-                    contentType: false,
-                    cache: false,
-                    processData: false
-                }).done(function (response) {
-                    console.log(response);
-                    alert('Add car information successfully!!!!');
-                    $(".add").hide();
-                    $("#btnList").show();
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        headers: {"Authorization": token},
+                        data: form_data,
+                        contentType: false,
+                        cache: false,
+                        processData: false
+                    }).done(function (response) {
+                        console.log(response);
+                        alert('Add car information successfully!!!!');
+                        $(".add").hide();
+                        $("#btnList").show();
 
-                }).fail(function (error) {
+                    }).fail(function (error) {
 
-                    var $showErr = $(".showErr");
-                    $showErr.css("visibility", "visible");
+                        var $showErr = $(".showErr");
+                        $showErr.css("visibility", "visible");
 
-                    var str = '';
+                        var str = '';
 
-                    $.each(error['responseJSON'], function (index, val) {
-                        str += "<li class='text-danger'>" + val + "</li>"
+                        $.each(error['responseJSON'], function (index, val) {
+                            str += "<li class='text-danger'>" + val + "</li>"
+                        });
+
+                        $showErr.html(str);
                     });
 
-                    $showErr.html(str);
                 });
 
+            });
+
+            // upload images into data
+            $('#images').change(function(){
+                var files = $('#images')[0].images;
+                var error = '';
+                var form_data = new FormData();
+
+                for(var count = 0; count<images.length; count++)
+                {
+                    var name = images[count].name;
+                    var extension = name.split('.').pop().toLowerCase();
+
+                    if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1)
+                    {
+                        error += "Invalid " + count + " Image File"
+                    }
+                    else
+                    {
+                        form_data.append("images[]", files[count]);
+                    }
+                }
+                if(error == '')
+                {
+                    $.ajax({
+                        url:"url",
+                        method:"POST",
+                        data:form_data,
+                        contentType:false,
+                        cache:false,
+                        processData:false,
+                        beforeSend:function()
+                        {
+                            $('#uploaded_images').html("<label class='text-success'>Uploading...</label>");
+                        },
+                        success:function(data)
+                        {
+                            $('#uploaded_images').html(data);
+                            $('#images').val('');
+                        }
+                    })
+                }
+                else
+                {
+                    alert(error);
+                }
             });
         });
 
