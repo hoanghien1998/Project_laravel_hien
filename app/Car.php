@@ -38,44 +38,6 @@ class Car extends Model
     }
 
     /**
-     * Format object to array
-     * @return array
-     */
-    public function transform()
-    {
-        $data = [
-            'id' => $this->id,
-            'seat' => $this->seat,
-            'model' => $this->model,
-            'body' => $this->body,
-            'year' => $this->year,
-            'price' => $this->price,
-            'dueDate' => $this->dueDate,
-            'startBid' => $this->startBid,
-            'endBid' => $this->endBid,
-            'description' => $this->description,
-        ];
-        $data['photo'] = $this->photo();
-        return $data;
-    }
-
-    /**
-     * Format data photo
-     * @return array
-     */
-    public function photo()
-    {
-        $photo = Photo::where([
-            'carId' => $this->id,
-        ])->first();
-        if (!empty($photo)) {
-            return $photo->photo;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Return all images according to carId
      * @return HasMany
      */

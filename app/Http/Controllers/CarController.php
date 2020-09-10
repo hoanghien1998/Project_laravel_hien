@@ -54,7 +54,7 @@ class CarController extends Controller
             'photo' => $name,
         ]);
 
-        return response()->json($car->transform());
+        return response()->json($this->transform($car));
     }
 
     /**
@@ -67,9 +67,8 @@ class CarController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $car = Car::find($id);
-
         if ($request->isMethod('post')) {
+            //validation
             $validator = Validator::make($request->all(), [
                 'seat' => 'required|integer|min:4',
                 'model' => 'required|string',
@@ -83,24 +82,50 @@ class CarController extends Controller
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
             }
-
-            Car::where('id', $id)->update(array_merge(
-                $validator->validated()
-            ));
-            $photo = Photo::where('carId', $car->_id)->first();
-            if ($request->hasFile('photo')) {
-                $file = $request->file('photo');
-                $name = time() . '-' . $file->getClientOriginalName();
-                $file->move(public_path('image'), $name);
-                $photo->file= $name;
+            //input
+            $seat = $request->get('seat');
+            $model = $request->get('model');
+            $body = $request->get('body');
+            $year = $request->get('year');
+            $price = $request->get('price');
+            $dueDate = $request->get('dueDate');
+            $startBid = $request->get('startBid');
+            $endBid = $request->get('endBid');
+            $description = $request->get('description');
+            //check exists
+            $car = Car::find($id);
+            if (empty($car)){
+                return $this->errorBadRequest(trans('core.not_found_record'));
             }
-
-            $photo->save();
-            return response()->json($car->transform());
+            $car->update([
+                'seat'=>$seat,
+                'model'=>$model,
+                'body'=>$body,
+                'year'=>$year,
+                'price'=>$price,
+                'dueDate'=>$dueDate,
+                'startBid'=>$startBid,
+                'endBid'=>$endBid,
+                'description'=>$description,
+            ]);
+            //update image
+            $name_image = $request->photo->getClientOriginalName();
+            $request->photo->move(public_path('image'), $name_image);
+            $photo = Photo::where('carId', $car->id);
+            $photo->update(['photo' => $name_image]);
+            return response()->json($this->transform($car));
         }
-        return response()->json($car->transform());
     }
 
+    /***
+     * Get information car to show form
+     * @param $id
+     * @return JsonResponse
+     */
+    public function show($id){
+        $car = Car::find($id);
+        return response()->json($this->transform($car));
+    }
     /**
      * Delete car according to id, first delete image, after delete car
      * @param $id
@@ -134,7 +159,46 @@ class CarController extends Controller
      */
     public function ShowImages($carId)
     {
-        $photo = Photo::find($carId);
+        $photo = Photo::where('carId', $carId)->first();
         return response()->json($photo, 200);
     }
+
+    /**
+     * Format data photo
+     * @return array
+     */
+    public function photo($id)
+    {
+        $photo = Photo::where([
+            'carId' => $id,
+        ])->first();
+        if (!empty($photo)) {
+            return $photo->photo;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Format object to array
+     * @return array
+     */
+    public function transform($car)
+    {
+
+        $data = [
+            'seat' => $car->seat,
+            'model' => $car->model,
+            'body' => $car->body,
+            'year' => $car->year,
+            'price' => $car->price,
+            'dueDate' => $car->dueDate,
+            'startBid' => $car->startBid,
+            'endBid' => $car->endBid,
+            'description' => $car->description,
+        ];
+        $data['photo'] = $this->photo($car->id);
+        return $data;
+    }
+
 }

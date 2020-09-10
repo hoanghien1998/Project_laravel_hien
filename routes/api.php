@@ -37,7 +37,7 @@ Route::group([
 ], function ($app) {
     $app->post('create', 'CarController@create');
     $app->post('update/{id}', 'CarController@update');
-    $app->get('update/{id}', 'CarController@update');
+    $app->get('update/{id}', 'CarController@show');
     $app->delete('delete/{id}', 'CarController@delete');
     $app->get('list-car', 'CarController@index');
     $app->get('list-images/{id}', 'CarController@ShowImages');
