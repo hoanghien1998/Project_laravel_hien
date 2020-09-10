@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12 col-md-12 add" style="display: none">
+            <div class="col-lg-6 col-md-6 add" style="display: none">
                 <h2>Add car form</h2>
                 <form method="post" id="addCarFrm" enctype="multipart/form-data">
                     @csrf
@@ -81,7 +81,7 @@
                     </div>
                     <div class="form-group">
                         <label for="upload">Upload Image:</label>
-                        <input type="file" class="form-control" name="image">
+                        <input type="file" class="form-control" name="image[]" multiple id="images">
                     </div>
                     <button type="submit" class="btn btn-success">Submit</button>
                 </form>
@@ -91,10 +91,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12 col-md-12">@include('cars.details')</div>
+            <div class="col-lg-6 col-md-6">@include('cars.details')</div>
         </div>
         <div class="row">
-            <div class="col-lg-12 col-md-12">@include('cars.update-cars')</div>
+            <div class="col-lg-6 col-md-6">@include('cars.update-cars')</div>
         </div>
     </div>
 @endsection
@@ -179,6 +179,7 @@
 
                     $showErr.html(str);
                 });
+
             });
         });
 
@@ -222,7 +223,6 @@
             });
         });
 
-
         // Show all photos carId
         function DetailsCar(carId) {
             $("#details").show();
@@ -237,14 +237,15 @@
                 contentType: "application/json",
                 headers: {"Authorization": token}
             }).done(function (response) {
+                alert(response);
                 var dataImage = "";
 
+                for (var i = 0; i < response.length; i++) {
+                    dataImage += "<tr>"
+                        + "<td>" + response[i]['carId'] + "</td>"
+                        + "<td>" + '<img alt="" src="image/' + response[i]['photo'] + '"/>' + "</td></tr>"
 
-                dataImage += "<tr>"
-                    + "<td>" + response['carId'] + "</td>"
-                    + "<td>" + '<img alt="" src="image/' + response['photo'] + '"/>' + "</td></tr>"
-
-
+                }
                 $('#tbbodyImage').html(dataImage);
                 $("#btnList").hide();
             });
@@ -276,7 +277,7 @@
                 $("#endBid").val(response['endBid']);
                 $("#description").text(response['description']);
                 //$("#photo").append("<img alt='' src='/" + response['photo'] + "'>");
-              $("#photo").val(response['photo']);
+                $("#photo").val(response['photo']);
 
             });
 

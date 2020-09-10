@@ -37,7 +37,10 @@ class CarController extends Controller
             'startBid' => 'required|string',
             'endBid' => 'required|string',
             'description' => 'required|string',
+            'photo' => 'required',
+            'photo.*' => 'mimes:jpg,png,jpeg,gif',
         ]);
+
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
@@ -46,14 +49,16 @@ class CarController extends Controller
             $validator->validated()
         ));
 
-        $name = $request->image->getClientOriginalName();
-        $request->image->move(public_path('image'), $name);
-
-        Photo::create([
-            'carId' => $car->id,
-            'photo' => $name,
-        ]);
-
+        if ($images = $request->hasFile('photo')) {
+            foreach ($request->file('photo') as $image) {
+                $name_img = $image->getClientOriginalName();
+                $image->move(public_path('image'), $name_img);
+                Photo::create([
+                    'carId' => $car->id,
+                    'photo' => $name_img,
+                ]);
+            }
+        }
         return response()->json($this->transform($car));
     }
 
@@ -94,19 +99,20 @@ class CarController extends Controller
             $description = $request->get('description');
             //check exists
             $car = Car::find($id);
-            if (empty($car)){
+
+            if (empty($car)) {
                 return $this->errorBadRequest(trans('core.not_found_record'));
             }
             $car->update([
-                'seat'=>$seat,
-                'model'=>$model,
-                'body'=>$body,
-                'year'=>$year,
-                'price'=>$price,
-                'dueDate'=>$dueDate,
-                'startBid'=>$startBid,
-                'endBid'=>$endBid,
-                'description'=>$description,
+                'seat' => $seat,
+                'model' => $model,
+                'body' => $body,
+                'year' => $year,
+                'price' => $price,
+                'dueDate' => $dueDate,
+                'startBid' => $startBid,
+                'endBid' => $endBid,
+                'description' => $description,
             ]);
             //update image
             $name_image = $request->photo->getClientOriginalName();
@@ -122,10 +128,12 @@ class CarController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function show($id){
+    public function show($id)
+    {
         $car = Car::find($id);
         return response()->json($this->transform($car));
     }
+
     /**
      * Delete car according to id, first delete image, after delete car
      * @param $id
@@ -159,7 +167,7 @@ class CarController extends Controller
      */
     public function ShowImages($carId)
     {
-        $photo = Photo::where('carId', $carId)->first();
+        $photo = Photo::where('carId', $carId);
         return response()->json($photo, 200);
     }
 
@@ -200,5 +208,4 @@ class CarController extends Controller
         $data['photo'] = $this->photo($car->id);
         return $data;
     }
-
 }
