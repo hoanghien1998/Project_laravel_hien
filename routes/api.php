@@ -41,5 +41,5 @@ Route::group([
     $app->delete('delete/{id}', 'CarController@delete');
     $app->get('list-car', 'CarController@index');
     $app->get('list-images/{id}', 'CarController@ShowImages');
-    $app->post('upload/{id}', 'CarController@uploadImages');
+    $app->post('upload', 'CarController@upload');
 });

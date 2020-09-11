@@ -38,7 +38,6 @@ class CarController extends Controller
             'endBid' => 'required|string',
             'description' => 'required|string',
             'photo' => 'required',
-            'photo.*' => 'mimes:jpg,png,jpeg,gif',
         ]);
 
         if ($validator->fails()) {
@@ -49,16 +48,17 @@ class CarController extends Controller
             $validator->validated()
         ));
 
-        if ($images = $request->hasFile('photo')) {
-            foreach ($request->file('photo') as $image) {
-                $name_img = $image->getClientOriginalName();
-                $image->move(public_path('image'), $name_img);
-                Photo::create([
-                    'carId' => $car->id,
-                    'photo' => $name_img,
-                ]);
-            }
-        }
+
+//        if ($images = $request->hasFile('photo')) {
+//            foreach ($request->file('photo') as $image) {
+//                $name_img = $image->getClientOriginalName();
+//                $image->move(public_path('image'), $name_img);
+//                Photo::create([
+//                    'carId' => $car->id,
+//                    'photo' => $name_img,
+//                ]);
+//            }
+//        }
         return response()->json($this->transform($car));
     }
 
@@ -160,15 +160,32 @@ class CarController extends Controller
     }
 
     /**
-     * Show images of car according to carId
      * @param $carId
-     *
      * @return JsonResponse
      */
     public function ShowImages($carId)
     {
         $photo = Photo::where('carId', $carId)->pluck('photo');
-        return response()->json($photo, 200);
+        return response()->json(['photo' => $photo], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function upload(Request $request)
+    {
+        $data = array();
+        if ($request->hasfile('image')) {
+            foreach ($request->file('image') as $file) {
+                $name_img = $file->getClientOriginalName();
+                $file->storeAs('uploads', $name_img);
+                $data[] = $name_img;
+                dd($data);
+            }
+        }
+
+        return response()->json(['image' => $data], 200);
     }
 
     /**

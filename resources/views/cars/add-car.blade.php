@@ -81,11 +81,8 @@
                     </div>
                     <div class="form-group">
                         <label for="upload">Upload Image:</label>
-                        <input type="file" class="form-control" name="images[]" multiple id="images">
-                        <div style="clear:both"></div>
-                        <br />
-                        <br />
-                        <div id="uploaded_images"></div>
+                        <input type="file" class="form-control" name="photo" multiple id="uploadImages">
+                        <div id='preview'></div>
                     </div>
                     <button type="submit" class="btn btn-success">Submit</button>
                 </form>
@@ -143,97 +140,108 @@
             });
         });
 
-        $(function () {
-            $("#btnAdd").click(function () {
-                $("#details").hide();
-                $(".add").show();
-                $(".listCar").hide();
-                // Add car
-                $("#addCarFrm").submit(function (event) {
-                    event.preventDefault(); //prevent default action
-                    const url = "http://hien-web.service.docker/api/car/create";
-                    var cookie = getCookie('access_token');
-                    var token = "Bearer " + cookie;
+        $("#btnAdd").click(function () {
+            $("#details").hide();
+            $(".add").show();
+            $(".listCar").hide();
+            // Add car
+            $("#addCarFrm").submit(function (event) {
+                event.preventDefault(); //prevent default action
+                const url = "http://hien-web.service.docker/api/car/create";
+                var cookie = getCookie('access_token');
+                var token = "Bearer " + cookie;
 
-                    var form_data = new FormData(this); //Creates new FormData object
+                var form_data = new FormData(this); //Creates new FormData object
 
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        headers: {"Authorization": token},
-                        data: form_data,
-                        contentType: false,
-                        cache: false,
-                        processData: false
-                    }).done(function (response) {
-                        console.log(response);
-                        alert('Add car information successfully!!!!');
-                        $(".add").hide();
-                        $("#btnList").show();
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {"Authorization": token},
+                    data: form_data,
+                    contentType: false,
+                    cache: false,
+                    processData: false
+                }).done(function (response) {
+                    console.log(response);
+                    alert('Add car information successfully!!!!');
+                    $(".add").hide();
+                    $("#btnList").show();
 
-                    }).fail(function (error) {
+                }).fail(function (error) {
 
-                        var $showErr = $(".showErr");
-                        $showErr.css("visibility", "visible");
+                    var $showErr = $(".showErr");
+                    $showErr.css("visibility", "visible");
 
-                        var str = '';
+                    var str = '';
 
-                        $.each(error['responseJSON'], function (index, val) {
-                            str += "<li class='text-danger'>" + val + "</li>"
-                        });
-
-                        $showErr.html(str);
+                    $.each(error['responseJSON'], function (index, val) {
+                        str += "<li class='text-danger'>" + val + "</li>"
                     });
 
+                    $showErr.html(str);
                 });
 
             });
 
-            // upload images into data
-            $('#images').change(function(){
-                var files = $('#images')[0].images;
-                var error = '';
-                var form_data = new FormData();
+        });
 
-                for(var count = 0; count<images.length; count++)
-                {
-                    var name = images[count].name;
-                    var extension = name.split('.').pop().toLowerCase();
+        // $('#image-upload').change(function () {
+        //     event.preventDefault();
+        //     let image_upload = new FormData();
+        //     let TotalImages = $('#image-upload')[0].files.length;  //Total Images
+        //     let images = $('#image-upload')[0];
+        //
+        //     for (let i = 0; i < TotalImages; i++) {
+        //         image_upload.append('images' + i, images.files[i]);
+        //     }
+        //     image_upload.append('TotalImages', TotalImages);
+        //
+        //     $.ajax({
+        //         method: 'POST',
+        //         url: 'http://hien-web.service.docker/api/car/upload',
+        //         data: image_upload,
+        //         contentType: false,
+        //         processData: false,
+        //         success: function (response) {
+        //             console.log(`ok ${response}`)
+        //         },
+        //         error: function () {
+        //             console.log(`Failed`)
+        //         }
+        //     });
+        //
+        // });
 
-                    if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1)
-                    {
-                        error += "Invalid " + count + " Image File"
-                    }
-                    else
-                    {
-                        form_data.append("images[]", files[count]);
-                    }
-                }
-                if(error == '')
-                {
-                    $.ajax({
-                        url:"url",
-                        method:"POST",
-                        data:form_data,
-                        contentType:false,
-                        cache:false,
-                        processData:false,
-                        beforeSend:function()
-                        {
-                            $('#uploaded_images').html("<label class='text-success'>Uploading...</label>");
-                        },
-                        success:function(data)
-                        {
-                            $('#uploaded_images').html(data);
-                            $('#images').val('');
-                        }
-                    })
-                }
-                else
-                {
-                    alert(error);
+        // upload images into data
+        $("#uploadImages").on('change',function (e){
+
+            var photo = e.target.files[0];
+            // console.log(photo);
+            var form_data = new FormData();
+            form_data.append("image", photo);
+            // console.log(form_data);
+            // AJAX request
+            $.ajax({
+                url: 'http://hien-web.service.docker/api/car/upload',
+                type: 'post',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    tempFiles.push(response.file);
+                    var img = '/storage/uploads/' + response.file;
+                    $('#image-list').append('<div class="img-box" data-img="' + response.file + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFiles, false)" class="delete">X</div></div>');
+                    // for (var index = 0; index < response.length; index++) {
+                    //     var src = response[index];
+                    //
+                    //     // Add img element in <div id='preview'>
+                    //     $('#preview').append('<img src="' + src + '" width="200px;" height="200px">');
+                    // }
+
                 }
             });
+
+
         });
 
         // show list car
@@ -290,13 +298,12 @@
                 contentType: "application/json",
                 headers: {"Authorization": token}
             }).done(function (response) {
-                alert(response);
                 var dataImage = "";
 
-                for (var i = 0; i < response.length; i++) {
+                for (var i = 0; i < response['photo'].length; i++) {
                     dataImage += "<tr>"
-                        + "<td>" + response[i]['carId'] + "</td>"
-                        + "<td>" + '<img alt="" src="image/' + response[i]['photo'] + '"/>' + "</td></tr>"
+                        + "<td>" + carId + "</td>"
+                        + "<td>" + '<img alt="" src="image/' + response['photo'][i] + '"/>' + "</td></tr>"
 
                 }
                 $('#tbbodyImage').html(dataImage);
