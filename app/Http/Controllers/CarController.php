@@ -47,7 +47,7 @@ class CarController extends Controller
             $validator->validated()
         ));
 
-        $images = $request->names;
+        $images = explode(',', $request->uploadedFile);
 
         foreach ($images as $img => $image) {
             Photo::create([

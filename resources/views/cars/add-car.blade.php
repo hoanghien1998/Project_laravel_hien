@@ -76,20 +76,17 @@
                     </div>
                     <div class="form-group">
                         <label for="description">Description:</label>
-                        <textarea name="description" class="form-control ckeditor" id="ckeditor" placeholder="Enter car_description"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <input type="file" id="foo" name="image" multiple="multiple" />
-                        <input name="file" type="text" />
+                        <textarea name="description" class="form-control ckeditor" id="ckeditor"
+                                  placeholder="Enter car_description"></textarea>
                     </div>
 
-{{--                    <div class="form-group">--}}
-{{--                        <label for="upload">Upload Image:</label>--}}
-{{--                        <input type="file" class="form-control" name="image" id="uploadImages" multiple>--}}
-{{--                    </div>--}}
-{{--                    <div class="form-group">--}}
-{{--                        <div id="image-list"></div>--}}
-{{--                    </div>--}}
+                    <div class="form-group">
+                        <label for="upload">Upload Image:</label>
+                        <input type="file" class="form-control" name="image" id="uploadImages" multiple>
+                    </div>
+                    <div class="form-group">
+                        <input name="file" type="text"/>
+                    </div>
                     <button type="submit" class="btn btn-success">Submit</button>
                 </form>
                 <ul style="visibility: hidden" class="showErr">
@@ -155,124 +152,73 @@
             $(".add").show();
             $(".listCar").hide();
 
-            // Add car
-            $("#addCarFrm").submit(function (event) {
-                event.preventDefault(); //prevent default action
-                // var data = serializeForm(this);
+        });
 
+        // Add car
+        $("#addCarFrm").submit(function (event) {
+            event.preventDefault(); //prevent default action
 
-                const url = "http://hien-web.service.docker/api/car/create";
-                var cookie = getCookie('access_token');
-                var token = "Bearer " + cookie;
+            const url = "http://hien-web.service.docker/api/car/create";
+            var cookie = getCookie('access_token');
+            var token = "Bearer " + cookie;
 
-                var form_data = new FormData(this); //Creates new FormData object
-                // delete form_data.file;
-                form_data.uploadedFile = names;
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    headers: {"Authorization": token},
-                    data: form_data,
-                    contentType: false,
-                    cache: false,
-                    processData: false
-                }).done(function (response) {
-                    console.log(response);
-                    alert('Add car information successfully!!!!');
-                    $(".add").hide();
-                    $("#btnList").show();
+            var form_data = new FormData(this); //Creates new FormData object
+            //form_data.uploadedFile = "hello world";
+            form_data.append("uploadedFile", tempFiles.join(','));
+            console.log(tempFiles);
+            // alert(form_data.uploadedFile);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {"Authorization": token},
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false
+            }).done(function (response) {
+                //alert(response['images']);
+                console.log(response);
+                alert('Add car information successfully!!!!');
+                $(".add").hide();
+                $("#btnList").show();
 
-                }).fail(function (error) {
+            }).fail(function (error) {
 
-                    var $showErr = $(".showErr");
-                    $showErr.css("visibility", "visible");
+                var $showErr = $(".showErr");
+                $showErr.css("visibility", "visible");
 
-                    var str = '';
+                var str = '';
 
-                    $.each(error['responseJSON'], function (index, val) {
-                        str += "<li class='text-danger'>" + val + "</li>"
-                    });
-
-                    $showErr.html(str);
+                $.each(error['responseJSON'], function (index, val) {
+                    str += "<li class='text-danger'>" + val + "</li>"
                 });
 
+                $showErr.html(str);
             });
-
+            return false;
         });
 
-        // // Create formData return obj
-        // var serializeForm = function (form) {
-        //     var obj = {};
-        //     var formData = new FormData(form);
-        //     for (var key of formData.keys()) {
-        //         obj[key] = formData.get(key);
-        //     }
-        //     return obj;
-        // };
+        // upload images into data
+        $("#uploadImages").on('change', function (e) {
 
-        $("input[name=image]").change(function() {
-            var names = [];
-            for (var i = 0; i < $(this).get(0).files.length; ++i) {
-                names.push($(this).get(0).files[i].name);
-            }
-            $("input[name=file]").val(names);
+            var photo = e.target.files[0];
+            var form_data = new FormData();
+            form_data.append("image", photo);
+
+            // AJAX request
+            $.ajax({
+                url: 'http://hien-web.service.docker/api/car/upload',
+                type: 'post',
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    tempFiles.push(response.file);
+                    $("input[name=file]").val(tempFiles);
+                }
+            });
         });
 
-        // // upload images into data
-        // $("#uploadImages").on('change',function (e){
-        //
-        //     var photo = e.target.files[0];
-        //     var form_data = new FormData();
-        //     form_data.append("image", photo);
-        //
-        //     // AJAX request
-        //     $.ajax({
-        //         url: 'http://hien-web.service.docker/api/car/upload',
-        //         type: 'post',
-        //         data: form_data,
-        //         contentType: false,
-        //         processData: false,
-        //         success: function (response) {
-        //             tempFiles.push(response.file);
-        //             var img = '/public/image/' + response.file;
-        //             $('#image-list').append('<div class="img-box" data-img="' + response.file + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFiles, false)" class="delete">X</div></div>');
-        //
-        //         }
-        //     });
-        //
-        //
-        // });
-        // function spliceItem(file, arr) {
-        //     const index = arr.indexOf(file);
-        //     arr.splice(index, 1);
-        // }
-        //
-        // function deleteImg(obj, tempFiles, isEditForm) {
-        //     var file = $(obj).parent().attr('data-img');
-        //
-        //     if(tempFilesEdit.includes(file))
-        //     {
-        //         spliceItem(file, tempFilesEdit);
-        //     }
-        //     else {
-        //         spliceItem(file, uploadedFile);
-        //     }
-        //
-        //     $(obj).parent().remove();
-        //     if(isEditForm)
-        //     {
-        //         imagesRemove.push(file);
-        //     }
-        // }
-        //
-        // function displayImg(obj) {
-        //     var file = '/public/image/' + $(obj).parent().attr('data-img');
-        //     var wLocation = window.location;
-        //     console.log(wLocation);
-        //     var baseUrl = wLocation.protocol + "//" + wLocation.host;
-        //
-        //     window.open(baseUrl + file);
-        // }
 
         // show list car
         $("#btnList").click(function () {
