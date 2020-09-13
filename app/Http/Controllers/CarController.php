@@ -37,7 +37,6 @@ class CarController extends Controller
             'startBid' => 'required|string',
             'endBid' => 'required|string',
             'description' => 'required|string',
-            'photo' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -48,17 +47,14 @@ class CarController extends Controller
             $validator->validated()
         ));
 
+        $images = $request->names;
 
-//        if ($images = $request->hasFile('photo')) {
-//            foreach ($request->file('photo') as $image) {
-//                $name_img = $image->getClientOriginalName();
-//                $image->move(public_path('image'), $name_img);
-//                Photo::create([
-//                    'carId' => $car->id,
-//                    'photo' => $name_img,
-//                ]);
-//            }
-//        }
+        foreach ($images as $img => $image) {
+            Photo::create([
+                'carId' => $car->id,
+                'photo' => $image,
+            ]);
+        }
         return response()->json($this->transform($car));
     }
 
@@ -175,17 +171,10 @@ class CarController extends Controller
      */
     public function upload(Request $request)
     {
-        $data = array();
-        if ($request->hasfile('image')) {
-            foreach ($request->file('image') as $file) {
-                $name_img = $file->getClientOriginalName();
-                $file->storeAs('uploads', $name_img);
-                $data[] = $name_img;
-                dd($data);
-            }
-        }
+        $name = $request->image->getClientOriginalName();
+        $request->image->move(public_path('image'), $name);
 
-        return response()->json(['image' => $data], 200);
+        return response()->json(['file' => $name], 200);
     }
 
     /**
