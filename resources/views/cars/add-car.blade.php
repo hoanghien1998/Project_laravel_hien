@@ -163,7 +163,6 @@
             var token = "Bearer " + cookie;
 
             var form_data = new FormData(this); //Creates new FormData object
-            //form_data.uploadedFile = "hello world";
             form_data.append("uploadedFile", tempFiles.join(','));
             console.log(tempFiles);
             // alert(form_data.uploadedFile);
@@ -287,8 +286,11 @@
             });
         }
 
-        // show car to update car
+        // show information car to update car
         function updateCar(car_id) {
+            tempFilesEdit = [];
+            imagesRemove = [];
+            uploadedFile = [];
             $("#details").hide();
             $("#update").show();
             $("#btnList").hide();
@@ -303,46 +305,126 @@
                 contentType: "application/json",
                 headers: {"Authorization": token}
             }).done(function (response) {
-                $("#seat").val(response['seat']);
-                $("#model").val(response['model']);
-                $("#body").val(response['body']);
-                $("#year").val(response['year']);
-                $("#price").val(response['price']);
-                $("#dueDate").val(response['dueDate']);
-                $("#startBid").val(response['startBid']);
-                $("#endBid").val(response['endBid']);
-                $("#description").text(response['description']);
-                //$("#photo").append("<img alt='' src='/" + response['photo'] + "'>");
-                $("#photo").val(response['photo']);
+                var obj = response['car'];
+                $("#seat").val(obj.seat);
+                $("#model").val(obj.model);
+                $("#body").val(obj.body);
+                $("#year").val(obj.year);
+                $("#price").val(obj.price);
+                $("#dueDate").val(obj.dueDate);
+                $("#startBid").val(obj.startBid);
+                $("#endBid").val(obj.endBid);
+                $("#description").text(obj.description);
+                $('#image-list-edit').val(response['car-image']);
+                // var images = "";
+                // for (var i = 0; i < response['car-image'].length; i++) {
+                //     var objImage = response['car-image'][i];
+                //     uploadedFile.push(objImage.photo);
+                //
+                //     var img = '/public/image/' + objImage.url;
+                //     images += '<div class="img-box" data-img="' + objImage.photo + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFilesEdit, true)" class="delete">X</div></div>';
+                //     $('#image-list-edit').html(images);
+                // }
 
             });
+             id = car_id;
+        }
 
-            // Post Edit form
-            $("#updateCarFrm").submit(function (event) {
+        // Post Edit form
+        $("#updateCarFrm").submit(function (event) {
+            event.preventDefault(); //prevent default action
+            const url = "http://hien-web.service.docker/api/car/update/";
+            var cookie = getCookie('access_token');
+            var token = "Bearer " + cookie;
 
-                event.preventDefault(); //prevent default action
-                const url = "http://hien-web.service.docker/api/car/update/";
-                var cookie = getCookie('access_token');
-                var token = "Bearer " + cookie;
+            var form_data = new FormData(this); //Creates new FormData object
 
-                var form_data = new FormData(this); //Creates new FormData object
+            delete form_data.file;
+            form_data.append("uploadedFile", tempFiles.join(','));
+            form_data.append("removeFile", imagesRemove.join(','));
 
+            $.ajax({
+                url: url + id,
+                type: 'POST',
+                headers: {"Authorization": token},
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false
+            }).done(function (response) {
+                console.log(response['car']);
+                alert('Update car information successfully!!!!');
+                $("#update").hide();
+                $("#btnList").show();
+                $("#uploadImageEdit").val('');
+            });
+        });
+
+
+        // Upload each image
+        $("#uploadImageEdit").change(function (e) {
+            var photo = e.target.files[0];
+
+            if (imagesRemove.includes(photo.name)) {
+                spliceItem(photo.name, imagesRemove);
+            }
+
+            if (!uploadedFile.includes(photo.name)) {
+                var form_data = new FormData();
+                form_data.append("image", photo);
                 $.ajax({
-                    url: url + car_id,
-                    type: 'POST',
-                    headers: {"Authorization": token},
+                    url: 'http://hien-web.service.docker/api/car/upload',
+                    type: 'post',
                     data: form_data,
                     contentType: false,
-                    cache: false,
-                    processData: false
-                }).done(function (response) {
-
-                    console.log(response);
-                    alert('Update car information successfully!!!!');
-                    $("#update").hide();
-                    $("#btnList").show();
+                    processData: false,
+                    success: function (response) {
+                        tempFiles.push(response.file);
+                        $("input[name=file]").val(tempFiles);
+                        //$('#image-list-edit').append('<div class="img-box" data-img="' + response.file + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFilesEdit, true)" class="delete">X</div></div>');
+                    }
                 });
-            });
+
+            }
+
+        });
+
+        var serializeForm = function (form) {
+            var obj = {};
+            var formData = new FormData(form);
+            for (var key of formData.keys()) {
+                obj[key] = formData.get(key);
+            }
+            return obj;
+        };
+
+        function spliceItem(file, arr) {
+            const index = arr.indexOf(file);
+            arr.splice(index, 1);
+        }
+
+        function deleteImg(obj, tempFiles, isEditForm) {
+            var file = $(obj).parent().attr('data-img');
+
+            if (tempFilesEdit.includes(file)) {
+                spliceItem(file, tempFilesEdit);
+            } else {
+                spliceItem(file, uploadedFile);
+            }
+
+            $(obj).parent().remove();
+            if (isEditForm) {
+                imagesRemove.push(file);
+            }
+        }
+
+        function displayImg(obj) {
+            var file = '/storage/uploads/' + $(obj).parent().attr('data-img');
+            var wLocation = window.location;
+            console.log(wLocation);
+            var baseUrl = wLocation.protocol + "//" + wLocation.host;
+
+            window.open(baseUrl + file);
         }
 
         // get cookie to save token

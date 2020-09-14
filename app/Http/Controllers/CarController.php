@@ -111,11 +111,30 @@ class CarController extends Controller
                 'description' => $description,
             ]);
             //update image
-            $name_image = $request->photo->getClientOriginalName();
-            $request->photo->move(public_path('image'), $name_image);
-            $photo = Photo::where('carId', $car->id);
-            $photo->update(['photo' => $name_image]);
-            return response()->json($this->transform($car));
+//            $name_image = $request->photo->getClientOriginalName();
+//            $request->photo->move(public_path('image'), $name_image);
+//            $photo = Photo::where('carId', $car->id);
+//            $photo->update(['photo' => $name_image]);
+//            return response()->json($this->transform($car));
+
+            Photo::where('carId', $id)->get();
+
+            $images = explode(',', $request->uploadedFile);
+            $imageRemove = explode(',', $request->removeFile);
+
+            foreach ($images as $img => $image) {
+                if (Photo::where('carId', $id)->where('photo', $image)->count() == 0) {
+                    Photo::create([
+                        'carId' => $car->id,
+                        'photo' => $image,
+                    ]);
+                }
+            }
+
+            foreach ($imageRemove as $img => $image) {
+                Photo::where('carId', $id)->where('photo', $image)->delete();
+            }
+            return response()->json(['car' => Car::get()], 200);
         }
     }
 
@@ -127,7 +146,9 @@ class CarController extends Controller
     public function show($id)
     {
         $car = Car::find($id);
-        return response()->json($this->transform($car));
+        //$photo = Photo::where('carId', $id)->pluck('photo');
+        return response()->json(['car' => $car, 'car-image' => $car->images], 200);
+        //return response()->json($this->transform($car,$photo));
     }
 
     /**

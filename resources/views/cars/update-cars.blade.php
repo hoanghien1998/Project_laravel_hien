@@ -39,8 +39,14 @@
         </div>
         <div class="form-group">
             <label for="upload">Upload Image:</label>
-            <input type="file" class="form-control" name="images">
+            <input type="file" class="form-control" name="image" id="uploadImageEdit">
         </div>
+        <div class="form-group">
+            <input name="file" type="text"/>
+        </div>
+{{--        <div class="form-group">--}}
+{{--            <div id="image-list-edit"></div>--}}
+{{--        </div>--}}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
