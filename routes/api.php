@@ -40,6 +40,5 @@ Route::group([
     $app->get('update/{id}', 'CarController@show');
     $app->delete('delete/{id}', 'CarController@delete');
     $app->get('list-car', 'CarController@index');
-    $app->get('list-images/{id}', 'CarController@ShowImages');
     $app->post('upload', 'CarController@upload');
 });

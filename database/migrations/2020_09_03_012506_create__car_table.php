@@ -21,11 +21,11 @@ class CreateCarTable extends Migration
             $table->integer('seat');
             $table->string('model');
             $table->string('body');
-            $table->string('year');
+            $table->year('year');
             $table->string('price');
             $table->date('dueDate');
-            $table->string('startBid');
-            $table->string('endBid');
+            $table->dateTime('startBid');
+            $table->dateTime('endBid');
             $table->string('description');
             $table->timestamps();
         });

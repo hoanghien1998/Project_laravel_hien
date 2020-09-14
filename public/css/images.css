@@ -1,0 +1,104 @@
+.function-block {
+    display: none;
+}
+
+#image-list {
+    display: flex;
+}
+
+#image-list .img-box {
+    display: inline-flex;
+    position: relative;
+    border: 1px solid #cdf;
+    margin-right: 5px;
+}
+
+#image-list .img-box .delete {
+    color: white;
+    padding: 0;
+    background: #ff0000;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 2px;
+    right: 2px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#image-list .delete:hover {
+    background: #9d3939;
+}
+
+#image-list .img-box .view {
+    color: white;
+    padding: 0;
+    background: #ff0000;
+    position: absolute;
+    width: 40px;
+    height: 16px;
+    top: 2px;
+    right: 22px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+}
+
+.img-box:hover .view {
+    display: initial !important;
+}
+
+
+#image-list-edit {
+    display: flex;
+}
+
+#image-list-edit .img-box {
+    display: inline-flex;
+    position: relative;
+    border: 1px solid #cdf;
+    margin-right: 5px;
+}
+
+#image-list-edit .img-box .delete {
+    color: white;
+    padding: 0;
+    background: #ff0000;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 2px;
+    right: 2px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#image-list-edit .delete:hover {
+    background: #9d3939;
+}
+
+#image-list-edit .img-box .view {
+    color: white;
+    padding: 0;
+    background: #ff0000;
+    position: absolute;
+    width: 40px;
+    height: 16px;
+    top: 2px;
+    right: 22px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+}
+
+.img-box:hover .view {
+    display: initial !important;
+}

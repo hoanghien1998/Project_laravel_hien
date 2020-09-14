@@ -6,6 +6,7 @@ use App\Car;
 use App\Photo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\Cars\UploadImageRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use function GuzzleHttp\json_encode;
@@ -79,7 +80,8 @@ class CarController extends Controller
                 'dueDate' => 'required|date',
                 'startBid' => 'required|string',
                 'endBid' => 'required|string',
-                'description' => 'required|string',]);
+                'description' => 'required|string',
+            ]);
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
             }
@@ -110,12 +112,6 @@ class CarController extends Controller
                 'endBid' => $endBid,
                 'description' => $description,
             ]);
-            //update image
-//            $name_image = $request->photo->getClientOriginalName();
-//            $request->photo->move(public_path('image'), $name_image);
-//            $photo = Photo::where('carId', $car->id);
-//            $photo->update(['photo' => $name_image]);
-//            return response()->json($this->transform($car));
 
             Photo::where('carId', $id)->get();
 
@@ -131,6 +127,7 @@ class CarController extends Controller
                 }
             }
 
+            // Delete images into database when user deleted on view
             foreach ($imageRemove as $img => $image) {
                 Photo::where('carId', $id)->where('photo', $image)->delete();
             }
@@ -146,9 +143,11 @@ class CarController extends Controller
     public function show($id)
     {
         $car = Car::find($id);
-        //$photo = Photo::where('carId', $id)->pluck('photo');
-        return response()->json(['car' => $car, 'car-image' => $car->images], 200);
-        //return response()->json($this->transform($car,$photo));
+
+        $car['startBid'] = date("Y-m-d\TH:i:s", strtotime($car['startBid']));
+        $car['endBid'] = date("Y-m-d\TH:i:s", strtotime($car['endBid']));
+        // $car->images('model return')
+        return response()->json(['car' => $car, 'photo' => $car->images], 200);
     }
 
     /**
@@ -176,15 +175,6 @@ class CarController extends Controller
         return response()->json(Car::get(), 200);
     }
 
-    /**
-     * @param $carId
-     * @return JsonResponse
-     */
-    public function ShowImages($carId)
-    {
-        $photo = Photo::where('carId', $carId)->pluck('photo');
-        return response()->json(['photo' => $photo], 200);
-    }
 
     /**
      * @param Request $request
@@ -193,7 +183,7 @@ class CarController extends Controller
     public function upload(Request $request)
     {
         $name = $request->image->getClientOriginalName();
-        $request->image->move(public_path('image'), $name);
+        $request->image->storeAs('public/uploads', $name);
 
         return response()->json(['file' => $name], 200);
     }

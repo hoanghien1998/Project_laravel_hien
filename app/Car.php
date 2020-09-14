@@ -41,8 +41,8 @@ class Car extends Model
      * Return all images according to carId
      * @return HasMany
      */
-    public function image()
+    public function images()
     {
-        return $this->hasMany('App\Photo', 'carId');
+        return $this->hasMany(Photo::class, 'carId');
     }
 }

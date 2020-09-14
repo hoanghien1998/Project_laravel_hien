@@ -85,8 +85,9 @@
                         <input type="file" class="form-control" name="image" id="uploadImages" multiple>
                     </div>
                     <div class="form-group">
-                        <input name="file" type="text"/>
+                        <div id="image-list"></div>
                     </div>
+
                     <button type="submit" class="btn btn-success">Submit</button>
                 </form>
                 <ul style="visibility: hidden" class="showErr">
@@ -140,8 +141,7 @@
                         + "<td>" + $item.startBid + "</td>"
                         + "<td>" + $item.endBid + "</td>"
                         + "<td>" + $item.description + "</td>"
-                        + "<td>" + "<button type=\"button\" class=\"btn btn-success\" onclick='DetailsCar(" + $item.id + ")'>Details</button>"
-                        + "<button type=\"button\" class=\"btn btn-warning\" onclick='updateCar(" + $item.id + ")'> Update</button>" + "</td>"
+                        + "<td>" + "<button type=\"button\" class=\"btn btn-warning\" onclick='updateCar(" + $item.id + ")'> Update</button>" + "</td>"
                 }
                 $('#tbbody').html(data);
             });
@@ -163,6 +163,9 @@
             var token = "Bearer " + cookie;
 
             var form_data = new FormData(this); //Creates new FormData object
+            //var data = serializeForm(this);
+            delete form_data.file;
+            //data.uploadedFile = tempFiles;
             form_data.append("uploadedFile", tempFiles.join(','));
             console.log(tempFiles);
             // alert(form_data.uploadedFile);
@@ -200,20 +203,25 @@
         // upload images into data
         $("#uploadImages").on('change', function (e) {
 
+            url = 'http://hien-web.service.docker/api/car/upload';
             var photo = e.target.files[0];
             var form_data = new FormData();
             form_data.append("image", photo);
 
             // AJAX request
             $.ajax({
-                url: 'http://hien-web.service.docker/api/car/upload',
+                url: url,
                 type: 'post',
                 data: form_data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
                     tempFiles.push(response.file);
-                    $("input[name=file]").val(tempFiles);
+                    // $("input[name=file]").val(tempFiles);
+
+                    var img = '/storage/uploads/' + response.file;
+                    $('#image-list').append('<div class="img-box" data-img="' + response.file + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFiles, false)" class="delete">X</div></div>');
+
                 }
             });
         });
@@ -252,39 +260,12 @@
                         + "<td>" + $item.startBid + "</td>"
                         + "<td>" + $item.endBid + "</td>"
                         + "<td>" + $item.description + "</td>"
-                        + "<td>" + "<button type=\"button\" class=\"btn btn-success\" onclick='DetailsCar(" + $item.id + ")'>Details</button>"
-                        + "<button type=\"button\" class=\"btn btn-warning\" onclick='updateCar(" + $item.id + ")'> Update</button>" + "</td>"
+                        + "<td>" + "<button type=\"button\" class=\"btn btn-warning\" onclick='updateCar(" + $item.id + ")'> Update</button>" + "</td>"
                 }
                 $('#tbbody').html(data);
             });
         });
 
-        // Show all photos carId
-        function DetailsCar(carId) {
-            $("#details").show();
-            const url = "http://hien-web.service.docker/api/car/list-images/";
-            var cookie = getCookie('access_token');
-            var token = "Bearer " + cookie;
-
-            $.ajax({
-                url: url + carId,
-                type: 'GET',
-                dataType: 'json',
-                contentType: "application/json",
-                headers: {"Authorization": token}
-            }).done(function (response) {
-                var dataImage = "";
-
-                for (var i = 0; i < response['photo'].length; i++) {
-                    dataImage += "<tr>"
-                        + "<td>" + carId + "</td>"
-                        + "<td>" + '<img alt="" src="image/' + response['photo'][i] + '"/>' + "</td></tr>"
-
-                }
-                $('#tbbodyImage').html(dataImage);
-                $("#btnList").hide();
-            });
-        }
 
         // show information car to update car
         function updateCar(car_id) {
@@ -315,19 +296,20 @@
                 $("#startBid").val(obj.startBid);
                 $("#endBid").val(obj.endBid);
                 $("#description").text(obj.description);
-                $('#image-list-edit').val(response['car-image']);
-                // var images = "";
-                // for (var i = 0; i < response['car-image'].length; i++) {
-                //     var objImage = response['car-image'][i];
-                //     uploadedFile.push(objImage.photo);
-                //
-                //     var img = '/public/image/' + objImage.url;
-                //     images += '<div class="img-box" data-img="' + objImage.photo + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFilesEdit, true)" class="delete">X</div></div>';
-                //     $('#image-list-edit').html(images);
-                // }
+                //$('#image-list-edit').val(response['car-image']);
+                var images = "";
+                if (response['photo'] != null) {
+                    for (var i = 0; i < response['photo'].length; i++) {
+                        var objImage = response['photo'][i];
+                        uploadedFile.push(objImage.photo);
 
+                        var img = '/storage/uploads/' + objImage.photo;
+                        images += '<div class="img-box" data-img="' + objImage.photo + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFilesEdit, true)" class="delete">X</div></div>';
+                        $('#image-list-edit').html(images);
+                    }
+                }
             });
-             id = car_id;
+            id = car_id;
         }
 
         // Post Edit form
@@ -337,6 +319,7 @@
             var cookie = getCookie('access_token');
             var token = "Bearer " + cookie;
 
+            //var data = serializeForm(this);
             var form_data = new FormData(this); //Creates new FormData object
 
             delete form_data.file;
@@ -380,8 +363,9 @@
                     processData: false,
                     success: function (response) {
                         tempFiles.push(response.file);
-                        $("input[name=file]").val(tempFiles);
-                        //$('#image-list-edit').append('<div class="img-box" data-img="' + response.file + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFilesEdit, true)" class="delete">X</div></div>');
+                        //$("input[name=file]").val(tempFiles);
+                        var img = '/storage/uploads/' + response.file;
+                        $('#image-list-edit').append('<div class="img-box" data-img="' + response.file + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFilesEdit, true)" class="delete">X</div></div>');
                     }
                 });
 
@@ -389,20 +373,12 @@
 
         });
 
-        var serializeForm = function (form) {
-            var obj = {};
-            var formData = new FormData(form);
-            for (var key of formData.keys()) {
-                obj[key] = formData.get(key);
-            }
-            return obj;
-        };
-
         function spliceItem(file, arr) {
             const index = arr.indexOf(file);
             arr.splice(index, 1);
         }
 
+        // delete when user want change images
         function deleteImg(obj, tempFiles, isEditForm) {
             var file = $(obj).parent().attr('data-img');
 
@@ -418,6 +394,7 @@
             }
         }
 
+        // display images on view
         function displayImg(obj) {
             var file = '/storage/uploads/' + $(obj).parent().attr('data-img');
             var wLocation = window.location;

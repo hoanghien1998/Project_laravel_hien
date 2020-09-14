@@ -123,6 +123,12 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    /**
+     * Link access to app
+     */
+
+    'path' => 'http://hien-web.service.docker/api/',
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
