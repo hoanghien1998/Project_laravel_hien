@@ -1,4 +1,4 @@
-@extends('layouts.index')
+@extends('layouts.layouts')
 
 @section('content')
     <div class="container">
@@ -151,6 +151,12 @@
             $("#details").hide();
             $(".add").show();
             $(".listCar").hide();
+
+            // Remove content added before
+            $('input').val('');
+            $('textarea').val('');
+            tempFiles = [];
+            $("#image-list").html('');
 
         });
 

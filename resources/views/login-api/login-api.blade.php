@@ -56,8 +56,7 @@
                     </div>
 
                 </form>
-                <div class="copy-text">Created with <i class="fa fa-heart"></i> by <a href="http://grafreez.com">Grafreez.com</a>
-                </div>
+                <div class="copy-text">Created with <i class="fa fa-heart"></i> by <a href="http://grafreez.com">Grafreez.com</a></div>
             </div>
             <div class="col-md-4 profile" style="display: none">
                 <h1 style="text-align: center; margin-top: 5px">Your Profile</h1>
@@ -111,7 +110,6 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
             </div>
 
@@ -391,12 +389,14 @@
                     return v ? v[2] : null;
                 }
 
+                // Create cookie.
                 function setCookie(name, value, days) {
                     const d = new Date;
                     d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
                     document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
                 }
 
+                // Set again new cookie.
                 function deleteCookie(name) {
                     setCookie(name, '', -1);
                 }

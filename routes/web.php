@@ -19,11 +19,6 @@ Route::get('/', function () {
     return view('home');
 });
 
-// router for login api
-Route::get('/login', function () {
-    return view('login-api.login-api');
-});
-
 // Router for page cars
 
 Route::get('/car', function () {
