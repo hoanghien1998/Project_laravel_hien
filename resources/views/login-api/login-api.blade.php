@@ -147,8 +147,11 @@
                                 </div>
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <div class="form-group">
-                                        <input type="text" name="gender" id="gender" class="form-control input-sm"
-                                               placeholder="Male or female">
+                                        <label for="cars">Choose a gender:</label>
+                                        <select id="gender" name="gender">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +165,8 @@
                                 </div>
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <div class="form-group">
-                                        <input type="date" name="birthday" id="birthday" class="form-control input-sm">
+                                        <input type="date" name="birthday" id="birthday" onblur="ValidateDOB()"
+                                               class="form-control input-sm">
                                     </div>
                                 </div>
                             </div>
@@ -275,117 +279,110 @@
                     });
                 });
 
-                $(function () {
-                    $("#btnPro").click(function () {
-                        $(".profile").show();
-                        $("#btnLogout").show();
-                        $("#btnPro").hide();
+                $("#btnPro").click(function () {
+                    $(".profile").show();
+                    $("#btnLogout").show();
+                    $("#btnPro").hide();
 
-                        const url = "http://hien-web.service.docker/api/auth/user-profile";
-                        const cookie = getCookie('access_token');
-                        const token = "Bearer " + cookie;
+                    const url = "http://hien-web.service.docker/api/auth/user-profile";
+                    const cookie = getCookie('access_token');
+                    const token = "Bearer " + cookie;
 
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            dataType: 'json',
-                            contentType: "application/json",
-                            headers: {"Authorization": token}
-                        }).done(function (response) { //
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        headers: {"Authorization": token}
+                    }).done(function (response) { //
 
-                            console.log(response['']);
-                            $("#first_name").val(response['firstname']);
-                            $("#last_name").val(response['lastname']);
-                            $("#phone").val(response['phone']);
-                            $("#birthday").val(response['birthday']);
-                            $("#gender").val(response['gender']);
-                            $("#email").val(response['email']);
-
-                        });
-                    });
-
-                    $('#registerFrm').submit(function (event) {
-                        event.preventDefault();
-                        const url = "http://hien-web.service.docker/api/auth/register";
-
-                        var request_method = $(this).attr("method");
-                        var form_data = new FormData(this);
-
-                        $.ajax({
-                            url: url,
-                            type: request_method,
-                            data: form_data,
-                            contentType: false,
-                            cache: false,
-                            processData: false
-                        }).done(function (response) {
-                            alert(response['message']);
-                            $(".login-sec").show();
-                            $(".centered-form").hide();
-
-                        });
-                    });
-
-                    $("#btnRegister").click(function () {
+                        console.log(response['']);
+                        $("#first_name").val(response['firstname']);
+                        $("#last_name").val(response['lastname']);
+                        $("#phone").val(response['phone']);
+                        $("#birthday").val(response['birthday']);
+                        $("#gender").val(response['gender']);
+                        $("#email").val(response['email']);
 
                     });
+                });
 
-                    $("#loginFr").submit(function (event) {
+                $('#registerFrm').submit(function (event) {
+                    event.preventDefault();
+                    const url = "http://hien-web.service.docker/api/auth/register";
 
-                        event.preventDefault(); //prevent default action
-                        const url = "http://hien-web.service.docker/api/auth/login";
+                    var form_data = new FormData(this);
 
-                        var form_data = new FormData(this); //Creates new FormData object
-
-                        $.ajax({
-                            url: url,
-                            type: 'POST',
-                            data: form_data,
-                            contentType: false,
-                            cache: false,
-                            processData: false
-                        }).done(function (response) {
-
-                            var token = response['access_token'];
-                            setCookie('access_token', token, 1);
-                            $("#btnPro").show();
-                            $(".login-sec").hide();
-
-                        }).fail(function () {
-                            $(".centered-form").show();
-                            $(".login-sec").hide();
-                        });
-                    });
-
-                    $("#btnLogout").click(function () {
-
-                        var cookie = getCookie('access_token');
-                        var token = "Bearer " + cookie;
-
-
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: form_data,
+                        contentType: false,
+                        cache: false,
+                        processData: false
+                    }).done(function (response) {
+                        alert(response['message']);
                         $(".login-sec").show();
-                        $(".profile").hide();
-                        $("#btnLogout").hide();
-                        $("#inEmail").val("");
-                        $("#inPass").val("");
+                        $(".centered-form").hide();
 
-                        const url = "http://hien-web.service.docker/api/auth/logout";
+                    });
+                });
 
-                        $.ajax({
-                            url: url,
-                            type: 'POST',
-                            headers: {"Authorization": token},
-                            contentType: false,
-                            cache: false,
-                            processData: false
-                        }).done(function (response) { //
+                $("#loginFr").submit(function (event) {
 
-                            alert(response['message']);
+                    event.preventDefault(); //prevent default action
+                    const url = "http://hien-web.service.docker/api/auth/login";
 
-                        });
+                    var form_data = new FormData(this); //Creates new FormData object
 
-                        deleteCookie('access_token');
-                    })
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: form_data,
+                        contentType: false,
+                        cache: false,
+                        processData: false
+                    }).done(function (response) {
+
+                        var token = response['access_token'];
+                        setCookie('access_token', token, 1);
+                        $("#btnPro").show();
+                        $(".login-sec").hide();
+
+                    }).fail(function () {
+                        $(".centered-form").show();
+                        $(".login-sec").hide();
+                    });
+                });
+
+                $("#btnLogout").click(function () {
+
+                    var cookie = getCookie('access_token');
+                    var token = "Bearer " + cookie;
+
+
+                    $(".login-sec").show();
+                    $(".profile").hide();
+                    $("#btnLogout").hide();
+                    $("#inEmail").val("");
+                    $("#inPass").val("");
+
+                    const url = "http://hien-web.service.docker/api/auth/logout";
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        headers: {"Authorization": token},
+                        contentType: false,
+                        cache: false,
+                        processData: false
+                    }).done(function (response) { //
+
+                        alert(response['message']);
+
+                    });
+
+                    deleteCookie('access_token');
                 });
 
                 // get cookie to save token
@@ -402,6 +399,35 @@
 
                 function deleteCookie(name) {
                     setCookie(name, '', -1);
+                }
+
+                // Validation for input birtday
+                function ValidateDOB() {
+                    var lblError = document.getElementById("lblError");
+
+                    //Check whether valid dd/MM/yyyy Date Format.
+                    var dtDOB = new Date(parts[1] + "/" + parts[0] + "/" + parts[2]);
+                    var dtCurrent = new Date();
+                    lblError.innerHTML = "Eligibility 18 years ONLY."
+                    if (dtCurrent.getFullYear() - dtDOB.getFullYear() < 15) {
+                        return false;
+                    }
+
+                    if (dtCurrent.getFullYear() - dtDOB.getFullYear() == 18) {
+
+                        //CD: 11/06/2018 and DB: 15/07/2000. Will turned 18 on 15/07/2018.
+                        if (dtCurrent.getMonth() < dtDOB.getMonth()) {
+                            return false;
+                        }
+                        if (dtCurrent.getMonth() == dtDOB.getMonth()) {
+                            //CD: 11/06/2018 and DB: 15/06/2000. Will turned 18 on 15/06/2018.
+                            if (dtCurrent.getDate() < dtDOB.getDate()) {
+                                return false;
+                            }
+                        }
+                    }
+                    lblError.innerHTML = "";
+                    return true;
                 }
             </script>
 @endsection
