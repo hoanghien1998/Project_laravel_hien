@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnCreatedByToCarsTable extends Migration
+class AddColumnCreatedByAndForeignKeyToCarsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,6 +15,11 @@ class AddColumnCreatedByToCarsTable extends Migration
     {
         Schema::table('cars', function (Blueprint $table) {
             $table->integer('created_by')->nullable()->unsigned();
+            $table->foreign('created_by', 'fk_cars_created_by')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
         });
     }
 
@@ -26,6 +31,7 @@ class AddColumnCreatedByToCarsTable extends Migration
     public function down()
     {
         Schema::table('cars', function (Blueprint $table) {
+            $table->dropForeign('fk_cars_created_by');
             $table->dropColumn('created_by');
         });
     }

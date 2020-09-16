@@ -154,7 +154,7 @@
 
             // Remove content added before
             $('input').val('');
-            $('textarea').val('');
+            $('#ckeditor').val('').empty();
             tempFiles = [];
             $("#image-list").html('');
 
@@ -169,9 +169,7 @@
             var token = "Bearer " + cookie;
 
             var form_data = new FormData(this); //Creates new FormData object
-            //var data = serializeForm(this);
             delete form_data.file;
-            //data.uploadedFile = tempFiles;
             form_data.append("uploadedFile", tempFiles.join(','));
             console.log(tempFiles);
             // alert(form_data.uploadedFile);
@@ -223,7 +221,6 @@
                 processData: false,
                 success: function (response) {
                     tempFiles.push(response.file);
-                    // $("input[name=file]").val(tempFiles);
 
                     var img = '/storage/uploads/' + response.file;
                     $('#image-list').append('<div class="img-box" data-img="' + response.file + '"><img src="' + img + '" width="200" height="200"/><div class="view" onclick="displayImg(this)">View</div><div onclick="deleteImg(this, tempFiles, false)" class="delete">X</div></div>');
@@ -302,7 +299,7 @@
                 $("#startBid").val(obj.startBid);
                 $("#endBid").val(obj.endBid);
                 $("#description").text(obj.description);
-                //$('#image-list-edit').val(response['car-image']);
+
                 var images = "";
                 if (response['photo'] != null) {
                     for (var i = 0; i < response['photo'].length; i++) {

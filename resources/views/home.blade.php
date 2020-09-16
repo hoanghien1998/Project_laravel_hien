@@ -170,6 +170,7 @@
             $("#btnRegister").show();
             $("#btnLogout").hide();
             $("#btnPro").hide();
+            $(".profile").hide();
 
             const url = "http://hien-web.service.docker/api/auth/logout";
 
