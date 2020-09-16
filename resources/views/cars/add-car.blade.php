@@ -5,7 +5,7 @@
         <div class="row">
             <button class="btn btn-danger" type="button" id="btnList" style="display: none">Show list car</button>
         </div>
-        <div class="row">
+        <div class="row list-car">
             <div class="col-lg-12 col-md-12 listCar">
                 <h2 style="text-align:center ">List cars</h2>
                 <button class="btn btn-success" value="add" id="btnAdd">Add car</button>
@@ -110,7 +110,29 @@
         var tempFilesEdit = [];
         var uploadedFile = [];
         var imagesRemove = [];
+
         $(window).on('load', function () {
+            const url = "http://hien-web.service.docker/api/auth/user-profile";
+            const cookie = getCookie('access_token');
+            const token = "Bearer " + cookie;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                contentType: "application/json",
+                headers: {"Authorization": token}
+            }).done(function (response) { //
+
+                $("#btnPro").show();
+                $("#btnLogout").show();
+
+            }).fail(function () {
+                $("#btnLogin").show();
+                $("#btnRegister").show();
+            });
+        });
+        $("#list-car").click(function () {
             const url = "http://hien-web.service.docker/api/car/list-car";
             var cookie = getCookie('access_token');
             var token = "Bearer " + cookie;

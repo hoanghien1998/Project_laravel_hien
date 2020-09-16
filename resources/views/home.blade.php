@@ -1,46 +1,11 @@
 @extends('layouts.layouts')
 @section('content')
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="http://hien-web.service.docker/">WebSite Bid Cars</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="http://hien-web.service.docker/car">List cars</a></li>
-                <li><a href="#">View Cars</a></li>
-                <li><a href="#">My Bid</a></li>
-            </ul>
-            <form class="navbar-form navbar-left" action="/action_page.php">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Search</button>
-            </form>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <button class="btn navbar-btn" id="btnRegister" style="display: none">
-                        <span class="glyphicon glyphicon-user"></span>Sign Up
-                    </button>
-                    <button class="btn navbar-btn" id="btnLogin" style="display: none">
-                        <span class="glyphicon glyphicon-log-in"></span>Login
-                    </button>
-
-                    <button class="btn navbar-btn" id="btnPro" style="display: none">
-                        <span class="glyphicon glyphicon-heart"></span>Your Profile
-                    </button>
-                    <button class="btn navbar-btn" id="btnLogout" style="display: none">
-                        <span class="glyphicon glyphicon-log-out"></span>Logout
-                    </button>
-                </li>
-            </ul>
-        </div>
-    </nav>
 
     <div class="container">
         @include('users.profile')
         @include('users.login')
         @include('users.register')
+        @include('cars.search')
     </div>
 
 @endsection
@@ -70,6 +35,10 @@
             });
         });
 
+        $("#search").click(function (){
+            $(".formSearch").show();
+
+        });
         // Show profile user
         $("#btnPro").click(function () {
             $(".profile").show();

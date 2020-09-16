@@ -42,3 +42,12 @@ Route::group([
     $app->get('list-car', 'CarController@index');
     $app->post('upload', 'CarController@upload');
 });
+
+/**
+ * Router group not middleware login
+ */
+Route::group([
+    'prefix' => 'car'
+], function ($app) {
+    $app->post('search', 'CarController@search');
+});

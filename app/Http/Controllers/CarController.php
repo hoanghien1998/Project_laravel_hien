@@ -189,6 +189,29 @@ class CarController extends Controller
     }
 
     /**
+     * Search all cars like request of user.
+     * @param Request $request
+     * @return mixed
+     */
+    public function search(Request $request)
+    {
+        $keyword = $request->get('keyword');
+        $startYear = $request->get('startYear');
+        $endYear = $request->get('endYear');
+        $price = $request->get('price');
+        $array = explode('-', $price);
+
+        $search_cars = Car::query()->where('model', 'like', "%{$keyword}%")
+            ->where('body', 'like', "%{$keyword}%")
+            ->where('year', '>=', $startYear)
+            ->where('year', '<=', $endYear)
+            ->where('price', '>=', $array[0])
+            ->where('price', '<=', $array[1])
+            ->get();
+        return response()->json(['search' => $search_cars], 200);
+    }
+
+    /**
      * Format data photo
      * @return array
      */
