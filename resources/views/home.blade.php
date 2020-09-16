@@ -1,40 +1,48 @@
 @extends('layouts.layouts')
 @section('content')
-    <div class="container-fluid">
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="http://hien-web.service.docker/">WebSite Bid Cars</a>
-                </div>
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="http://hien-web.service.docker/car">List cars</a></li>
-                    <li><a href="#">View Cars</a></li>
-                    <li><a href="#">My Bid</a></li>
-                </ul>
-                <form class="navbar-form navbar-left" action="/action_page.php">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
-                    </div>
-                    <button type="submit" class="btn btn-default">Search</button>
-                </form>
-
-                <ul class="nav navbar-nav navbar-right" style="margin-left: 10px">
-                    <li>
-                        <button style="margin-top: 10px" id="btnRegister">
-                            <span class="glyphicon glyphicon-user" style="margin-right: 8px"></span>Sign Up
-                        </button>
-                        <button id="btnLogin" style="margin-top: 10px">
-                            <span class="glyphicon glyphicon-log-in" style="margin-right: 8px"></span>Login
-                        </button>
-                    </li>
-                </ul>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="http://hien-web.service.docker/">WebSite Bid Cars</a>
             </div>
-        </nav>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="http://hien-web.service.docker/car">List cars</a></li>
+                <li><a href="#">View Cars</a></li>
+                <li><a href="#">My Bid</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" action="/action_page.php">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
 
-        @include('users.profile');
-        @include('users.login');
-        @include('users.register');
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <button class="btn navbar-btn" id="btnRegister" style="display: none">
+                        <span class="glyphicon glyphicon-user"></span>Sign Up
+                    </button>
+                    <button class="btn navbar-btn" id="btnLogin" style="display: none">
+                        <span class="glyphicon glyphicon-log-in"></span>Login
+                    </button>
+
+                    <button class="btn navbar-btn" id="btnPro" style="display: none">
+                        <span class="glyphicon glyphicon-heart"></span>Your Profile
+                    </button>
+                    <button class="btn navbar-btn" id="btnLogout" style="display: none">
+                        <span class="glyphicon glyphicon-log-out"></span>Logout
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        @include('users.profile')
+        @include('users.login')
+        @include('users.register')
     </div>
+
 @endsection
 
 @section('script')
@@ -53,9 +61,34 @@
                 headers: {"Authorization": token}
             }).done(function (response) { //
 
-                $(".profile").show();
+                $("#btnPro").show();
                 $("#btnLogout").show();
 
+            }).fail(function () {
+                $("#btnLogin").show();
+                $("#btnRegister").show();
+            });
+        });
+
+        // Show profile user
+        $("#btnPro").click(function () {
+            $(".profile").show();
+            $("#btnLogout").show();
+            $("#btnPro").hide();
+
+            const url = "http://hien-web.service.docker/api/auth/user-profile";
+            const cookie = getCookie('access_token');
+            const token = "Bearer " + cookie;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                contentType: "application/json",
+                headers: {"Authorization": token}
+            }).done(function (response) { //
+
+                console.log(response['']);
                 $("#first_name").val(response['firstname']);
                 $("#last_name").val(response['lastname']);
                 $("#phone").val(response['phone']);
@@ -63,15 +96,14 @@
                 $("#gender").val(response['gender']);
                 $("#email").val(response['email']);
 
-            }).fail(function () {
-                $(".login-sec").show();
             });
         });
 
         $("#btnLogin").click(function () {
-            $("#loginFr").show();
+            $(".login-sec").show();
         });
-        // login page
+
+        // Login page after submit
         $("#loginFr").submit(function (event) {
 
             event.preventDefault(); //prevent default action
@@ -91,12 +123,70 @@
                 var token = response['access_token'];
                 setCookie('access_token', token, 1);
                 $("#btnPro").show();
+                $("#btnLogout").show();
                 $(".login-sec").hide();
-
+                $("#btnLogin").hide();
+                $("#btnRegister").hide();
             }).fail(function () {
-                $(".centered-form").show();
+                $(".register").show();
                 $(".login-sec").hide();
             });
+        });
+
+        $("#btnRegister").click(function () {
+            $(".register").show();
+        });
+
+        // When user submit form register
+        $('#registerFrm').submit(function (event) {
+            event.preventDefault();
+            const url = "http://hien-web.service.docker/api/auth/register";
+
+            var form_data = new FormData(this);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false
+            }).done(function (response) {
+                alert(response['message']);
+                $(".login-sec").show();
+                $(".register").hide();
+
+            });
+        });
+
+        // When onclick into btn logout
+        $("#btnLogout").click(function () {
+
+            var cookie = getCookie('access_token');
+            var token = "Bearer " + cookie;
+
+
+            $("#btnLogin").show();
+            $("#btnRegister").show();
+            $("#btnLogout").hide();
+            $("#btnPro").hide();
+
+            const url = "http://hien-web.service.docker/api/auth/logout";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {"Authorization": token},
+                contentType: false,
+                cache: false,
+                processData: false
+            }).done(function (response) { //
+
+                alert(response['message']);
+
+            });
+
+            deleteCookie('access_token');
         });
 
 
