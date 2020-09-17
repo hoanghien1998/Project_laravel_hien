@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Car;
+use App\Http\Request\Cars\SearchRequest;
 use App\Photo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -171,8 +172,8 @@ class CarController extends Controller
      */
     public function index()
     {
-
-        return response()->json(Car::get(), 200);
+        $cars = Car::orderBy('id', 'asc')->get();
+        return response()->json(['cars' =>$cars], 200);
     }
 
 
@@ -195,11 +196,27 @@ class CarController extends Controller
      */
     public function search(Request $request)
     {
+        // Validations
+        $validator = Validator::make($request->all(), [
+            'keyword' => 'required|string|between:2,100',
+            'startYear' => 'required|numeric|min:1900|max:2020',
+            'endYear' => 'required|numeric|min:1900|max:2020|gte:year_start',
+            'price' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        // Input
         $keyword = $request->get('keyword');
         $startYear = $request->get('startYear');
         $endYear = $request->get('endYear');
         $price = $request->get('price');
+
         $array = explode('-', $price);
+        $str = $price;
+        preg_match_all('!\d+!', $str, $matches);
 
         $search_cars = Car::query()->where('model', 'like', "%{$keyword}%")
             ->where('body', 'like', "%{$keyword}%")
@@ -207,6 +224,7 @@ class CarController extends Controller
             ->where('year', '<=', $endYear)
             ->where('price', '>=', $array[0])
             ->where('price', '<=', $array[1])
+//            ->where('price', '>=', $matches)
             ->get();
         return response()->json(['search' => $search_cars], 200);
     }

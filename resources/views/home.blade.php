@@ -6,6 +6,7 @@
         @include('users.login')
         @include('users.register')
         @include('cars.search')
+        @include('cars.view-cars')
     </div>
 
 @endsection
@@ -28,6 +29,7 @@
 
                 $("#btnPro").show();
                 $("#btnLogout").show();
+                $("#viewCars").hide();
 
             }).fail(function () {
                 $("#btnLogin").show();
@@ -35,15 +37,110 @@
             });
         });
 
-        $("#search").click(function (){
+        // Search car
+        $("#search").click(function () {
             $(".formSearch").show();
+            $("#viewCars").hide();
 
         });
+        $("#searchFrm").submit(function (event) {
+            event.preventDefault();
+            const url = "http://hien-web.service.docker/api/car/search";
+            var form_data = new FormData(this);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false
+            }).done(function (response) {
+
+                var data = "";
+                for (var i = 0; i < response['search'].length; i++) {
+                    //alert(response['search']);
+                    var obj = response['search'][i];
+                    var trimmedString = obj.description.substring(0, 30);
+                    var image = response['search'][i]['default_image'];
+
+                    data += "<div class=\"media col-lg-4\" style='margin-top: 20px'>" +
+                        "<div class=\"media-left\">" +
+                        "<img src='storage/uploads/" + image.photo + "' onclick='showCarDetail(this)' class=\"media-object media-img\" style=\"width:100px; height: 100px; border-radius: 3%\" + data-id='" + obj.id + "'>" +
+                        "</div>" +
+                        "<div class=\"media-body\">" +
+                        "<h4 class=\"media-heading\" id=\"title\">" + obj.model + " - " + obj.body + "</h4>" +
+                        "<p> " + trimmedString + "</p>" +
+                        "</div>" +
+                        "</div>"
+                }
+                $('#ResultSearch').html(data);
+
+            }).fail(function (error) {
+                var obj = JSON.parse(error['responseText']);
+                var errors = "";
+
+                $.each(obj.errors, function (index, value) {
+                    errors += value;
+                });
+
+                var errs = "<div class=\"alert alert-danger alert-dismissible\">" +
+                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>" + errors +
+                    "</div>";
+                $("#showErrorSearch").html(errs);
+            });
+            return false;
+        });
+
+        // Show view cars
+        $("#view-cars").click(function () {
+            $("#viewCars").show();
+            ViewCars();
+        });
+
+        // Get all cars to show
+        function ViewCars() {
+            const url = "http://hien-web.service.docker/api/car/list-car";
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                contentType: "application/json",
+            }).done(function (response) {
+                var data = "";
+                // Append data car
+                for (var i = 0; i < response['cars'].length; i++) {
+
+                    var obj = response['cars'][i];
+                    var image = response['cars'][i]['default_image'];
+
+                    data += "<div class=\"media col-lg-4\" style='margin-top: 20px;'>" +
+                        "<div class=\"media-left\">" +
+                        "<img src='storage/uploads/" + image.photo + "' onclick='showCarDetail(this)' class=\"media-object media-img\" style=\"width:150px; height: 150px; border-radius: 3%\" + data-id='" + obj.id + "'>" +
+                        "</div>" +
+                        "<div class=\"media-body\">" +
+                        "<h4 class=\"media-heading\" id=\"title\"><span>Title: </span>" + obj.model + " - " + obj.body + "</h4>" +
+                        "<p>" + obj.description + "</p>" +
+                        "</div>" +
+                        "</div>"
+                }
+
+                $('#viewCars').html(data);
+            });
+        }
+
+        // Show car detail
+        function showCarDetail(obj)
+        {
+            var id = $(obj).attr('data-id');
+
+        }
+
         // Show profile user
         $("#btnPro").click(function () {
             $(".profile").show();
             $("#btnLogout").show();
             $("#btnPro").hide();
+            $("#viewCars").hide();
 
             const url = "http://hien-web.service.docker/api/auth/user-profile";
             const cookie = getCookie('access_token');
@@ -96,17 +193,18 @@
                 $(".login-sec").hide();
                 $("#btnLogin").hide();
                 $("#btnRegister").hide();
+                $("#viewCars").hide();
             }).fail(function () {
                 $(".register").show();
                 $(".login-sec").hide();
             });
         });
 
+        // Register account user
         $("#btnRegister").click(function () {
             $(".register").show();
+            $("#viewCars").hide();
         });
-
-        // When user submit form register
         $('#registerFrm').submit(function (event) {
             event.preventDefault();
             const url = "http://hien-web.service.docker/api/auth/register";
@@ -140,6 +238,7 @@
             $("#btnLogout").hide();
             $("#btnPro").hide();
             $(".profile").hide();
+            $("#viewCars").hide();
 
             const url = "http://hien-web.service.docker/api/auth/logout";
 

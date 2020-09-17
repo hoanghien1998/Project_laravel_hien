@@ -39,7 +39,6 @@ Route::group([
     $app->post('update/{id}', 'CarController@update');
     $app->get('update/{id}', 'CarController@show');
     $app->delete('delete/{id}', 'CarController@delete');
-    $app->get('list-car', 'CarController@index');
     $app->post('upload', 'CarController@upload');
 });
 
@@ -50,4 +49,5 @@ Route::group([
     'prefix' => 'car'
 ], function ($app) {
     $app->post('search', 'CarController@search');
+    $app->get('list-car', 'CarController@index');
 });

@@ -38,11 +38,22 @@ class Car extends Model
     }
 
     /**
+     * @var string[]
+     */
+    protected $appends = ['default_image'];
+
+
+    /**
      * Return all images according to carId
      * @return HasMany
      */
     public function images()
     {
         return $this->hasMany(Photo::class, 'carId');
+    }
+
+    public function getDefaultImageAttribute()
+    {
+        return $this->images()->orderBy('id')->first();
     }
 }

@@ -148,8 +148,8 @@
                 var data = "";
 
                 // Append data car
-                for (let i = 0; i < response.length; i++) {
-                    var $item = response[i];
+                for (let i = 0; i < response['cars'].length; i++) {
+                    var $item = response['cars'][i];
 
                     data += "<tr>"
                         + "<td>" + $item.id + "</td>"
@@ -270,8 +270,8 @@
                 var data = "";
 
                 // Append data car
-                for (let i = 0; i < response.length; i++) {
-                    var $item = response[i];
+                for (let i = 0; i < response['cars'].length; i++) {
+                    var $item = response['cars'][i];
 
                     data += "<tr>"
                         + "<td>" + $item.id + "</td>"
