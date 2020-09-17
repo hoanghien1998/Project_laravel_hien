@@ -148,7 +148,7 @@ class CarController extends Controller
         $car['startBid'] = date("Y-m-d\TH:i:s", strtotime($car['startBid']));
         $car['endBid'] = date("Y-m-d\TH:i:s", strtotime($car['endBid']));
         // $car->images('model return')
-        return response()->json(['car' => $car, 'photo' => $car->images], 200);
+        return response()->json(['car' => $car, 'car-image' => $car->images], 200);
     }
 
     /**

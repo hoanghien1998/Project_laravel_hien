@@ -1,6 +1,6 @@
-<div style="display: none" id="details">
-    <h2>Details Cars</h2>
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+<div class="row carousel" style="display: none" id="details">
+    <h2 style="text-align: center">Details Cars</h2>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" style="margin: auto; width: 60%; margin-bottom: 10px">
         <!-- Indicators -->
         <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -9,18 +9,8 @@
         </ol>
 
         <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <img src="" alt="Los Angeles" style="width:100%;">
-            </div>
+        <div class="carousel-inner" id="images">
 
-            <div class="item">
-                <img src="" alt="Chicago" style="width:100%;">
-            </div>
-
-            <div class="item">
-                <img src="" alt="New york" style="width:100%;">
-            </div>
         </div>
 
         <!-- Left and right controls -->
@@ -33,7 +23,7 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover" style="margin: auto; width: 60%">
         <thead>
         <tr>
             <th>ID</th>

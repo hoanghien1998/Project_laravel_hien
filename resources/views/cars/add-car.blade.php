@@ -106,6 +106,7 @@
         @include('users.profile')
         @include('users.login')
         @include('users.register')
+        @include('cars.details')
     </div>
 @endsection
 
@@ -280,6 +281,54 @@
             });
         }
 
+        // Show car detail
+        function showCarDetail(obj) {
+            var id = $(obj).attr('name');
+            $("#details").show();
+            $("#viewCars").hide();
+
+            const url = "http://hien-web.service.docker/api/car/update/";
+            $.ajax({
+                url: url + id,
+                type: 'GET',
+                dataType: 'json',
+                contentType: "application/json",
+            }).done(function (response) {
+                var data = "";
+                var data1 = "";
+                var $item = response['car'];
+                data += "<tr>"
+                    + "<td>" + $item.id + "</td>"
+                    + "<td>" + $item.status + "</td>"
+                    + "<td>" + $item.seat + "</td>"
+                    + "<td>" + $item.model + "</td>"
+                    + "<td>" + $item.body + "</td>"
+                    + "<td>" + $item.year + "</td>"
+                    + "<td>" + $item.price + "</td>"
+                    + "<td>" + $item.dueDate + "</td>"
+                    + "<td>" + $item.startBid + "</td>"
+                    + "<td>" + $item.endBid + "</td>"
+                    + "<td>" + $item.description + "</td></tr>"
+
+                for (var i = 0; i < response['car-image'].length; i++) {
+
+                    if (i == 0) {
+                        data1 += "<div class=\"item active\" >" +
+                            "<img src='" + "storage/uploads/" + response['car-image'][i]['photo'] + "' alt=\"Los Angeles\" style=\"width: 800px; height: 300px\">" +
+                            "</div>";
+                    } else {
+                        data1 += "<div class=\"item\" >" +
+                            "<img src='" + "storage/uploads/" + response['car-image'][i]['photo'] + "' alt=\"Los Angeles\" style=\"width: 800px; height: 300px\">" +
+                            "</div>";
+                    }
+                }
+
+                $('#tbodyDetails').html(data);
+                $('#images').html(data1);
+
+            });
+        }
+
         // Add new cars
         $("#btnAdd").click(function () {
             $("#details").hide();
@@ -436,9 +485,9 @@
                 $("#description").text(obj.description);
 
                 var images = "";
-                if (response['photo'] != null) {
-                    for (var i = 0; i < response['photo'].length; i++) {
-                        var objImage = response['photo'][i];
+                if (response['car-image'] != null) {
+                    for (var i = 0; i < response['car-image'].length; i++) {
+                        var objImage = response['car-image'][i];
                         uploadedFile.push(objImage.photo);
 
                         var img = '/storage/uploads/' + objImage.photo;
