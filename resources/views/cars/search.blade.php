@@ -1,7 +1,6 @@
 <div class="row formSearch" style="display: none">
     <div class="col-md-8">
         <div class="jumbotron">
-            <span id="showErrorSearch"></span>
             <form action="/action_page.php" method="post" id="searchFrm">
                 <div class="row">
                     <div class="form-group">
@@ -38,6 +37,7 @@
                     </div>
                 </div>
             </form>
+            <span id="showErrorSearch"></span>
         </div>
     </div>
 </div>

@@ -30,6 +30,7 @@
                 $("#btnPro").show();
                 $("#btnLogout").show();
                 $("#viewCars").hide();
+                $(".formSearch").hide();
 
             }).fail(function () {
                 $("#btnLogin").show();
@@ -41,6 +42,9 @@
         $("#search").click(function () {
             $(".formSearch").show();
             $("#viewCars").hide();
+            $(".profile").hide();
+            $(".login-sec").hide();
+            $(".register").hide();
 
         });
         $("#searchFrm").submit(function (event) {
@@ -68,7 +72,7 @@
                         "<img src='storage/uploads/" + image.photo + "' onclick='showCarDetail(this)' class=\"media-object media-img\" style=\"width:100px; height: 100px; border-radius: 3%\" + data-id='" + obj.id + "'>" +
                         "</div>" +
                         "<div class=\"media-body\">" +
-                        "<h4 class=\"media-heading\" id=\"title\">" + obj.model + " - " + obj.body + "</h4>" +
+                        "<h4 class=\"media-heading\" id=\"title\"><a href=''>" + obj.model + " - " + obj.body + "</a></h4>" +
                         "<p> " + trimmedString + "</p>" +
                         "</div>" +
                         "</div>"
@@ -94,6 +98,10 @@
         // Show view cars
         $("#view-cars").click(function () {
             $("#viewCars").show();
+            $(".formSearch").hide();
+            $(".profile").hide();
+            $(".login-sec").hide();
+            $(".register").hide();
             ViewCars();
         });
 
@@ -112,13 +120,14 @@
 
                     var obj = response['cars'][i];
                     var image = response['cars'][i]['default_image'];
+                    var link = "http://hien-web.service.docker/detail-cars/".concat(obj.id);
 
-                    data += "<div class=\"media col-lg-4\" style='margin-top: 20px;'>" +
+                    data += "<div class=\"media col-lg-6\" style='margin-top: 20px;'>" +
                         "<div class=\"media-left\">" +
-                        "<img src='storage/uploads/" + image.photo + "' onclick='showCarDetail(this)' class=\"media-object media-img\" style=\"width:150px; height: 150px; border-radius: 3%\" + data-id='" + obj.id + "'>" +
+                        "<img src='storage/uploads/" + image.photo + "' onclick='showCarDetail(this)' class=\"media-object media-img\" style=\"width:150px; height: 150px; border-radius: 3%\" + name='" + obj.id + "'>" +
                         "</div>" +
                         "<div class=\"media-body\">" +
-                        "<h4 class=\"media-heading\" id=\"title\"><span>Title: </span>" + obj.model + " - " + obj.body + "</h4>" +
+                        "<h4 class=\"media-heading\" id=\"title\"><a href= 'javascript:void(0)' onclick='showCarDetail(this)'>" + obj.model + " - " + obj.body + "</a></h4>" +
                         "<p>" + obj.description + "</p>" +
                         "</div>" +
                         "</div>"
@@ -129,10 +138,9 @@
         }
 
         // Show car detail
-        function showCarDetail(obj)
-        {
-            var id = $(obj).attr('data-id');
-
+        function showCarDetail(obj) {
+            var id = $(obj).attr('name');
+            window.location.href = "http://hien-web.service.docker/detail-cars/" +id;
         }
 
         // Show profile user
@@ -167,6 +175,7 @@
 
         $("#btnLogin").click(function () {
             $(".login-sec").show();
+            $(".register").hide();
         });
 
         // Login page after submit
@@ -195,6 +204,7 @@
                 $("#btnRegister").hide();
                 $("#viewCars").hide();
             }).fail(function () {
+                alert("Don't you have an account. Please register account!!! ");
                 $(".register").show();
                 $(".login-sec").hide();
             });
@@ -203,6 +213,7 @@
         // Register account user
         $("#btnRegister").click(function () {
             $(".register").show();
+            $(".login-sec").hide();
             $("#viewCars").hide();
         });
         $('#registerFrm').submit(function (event) {
@@ -220,6 +231,8 @@
                 processData: false
             }).done(function (response) {
                 alert(response['message']);
+                $("#inEmail").val('');
+                $("#inPass").val('');
                 $(".login-sec").show();
                 $(".register").hide();
 
