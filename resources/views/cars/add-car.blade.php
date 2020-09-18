@@ -140,6 +140,17 @@
                 $("#btnRegister").show();
             });
         });
+
+        // Validation birthday when register
+        $(document).ready(function () {
+            $("#txtDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-80:-15",
+                dateFormat: 'yy-mm-dd',
+            });
+        });
+
         $(".list-car").ready(function () {
             $(".list-car").show();
             const url = "http://hien-web.service.docker/api/car/list-car";
@@ -609,6 +620,7 @@
             $("#details").hide();
             $("#ResultSearch").hide();
             $(".formSearch").hide();
+            $(".list-car").hide();
         });
 
         // Login page after submit
@@ -651,6 +663,7 @@
             $("#details").hide();
             $("#ResultSearch").hide();
             $(".formSearch").hide();
+            $(".list-car").hide();
         });
         $('#registerFrm').submit(function (event) {
             event.preventDefault();

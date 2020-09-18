@@ -49,9 +49,9 @@
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
-                                <input type="date" name="birthday" id="birthday" onblur="ValidateDOB()"
-                                       class="form-control input-sm">
+                                <input type="text" id="txtDate" name="birthday" required>
                             </div>
+                            <span id="lblError" style="color:Red"></span>
                         </div>
                     </div>
 

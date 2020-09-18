@@ -207,7 +207,7 @@ class CarController extends Controller
             $min = $array[0];
             $max = $array[1];
         } else {
-            $max=$min=100;
+            $max = $min = 100;
         }
 
         $search_cars = Car::query();
