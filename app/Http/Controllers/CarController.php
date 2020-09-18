@@ -202,20 +202,37 @@ class CarController extends Controller
         $endYear = $request->get('endYear');
         $price = $request->get('price');
 
-        $array = explode('-', $price);
-//        $str = $price;
-//        preg_match_all('!\d+!', $str, $matches);
+        if ($price != "anyPrice" && $price != "morethan300000") {
+            $array = explode('-', $price);
+            $min = $array[0];
+            $max = $array[1];
+        } else {
+            $max=$min=100;
+        }
 
-        $search_cars = Car::query()
-            ->where('model', 'like', "%{$keyword}%")
-            ->where('body', 'like', "%{$keyword}%")
-            ->where('year', '>=', $startYear)
-            ->where('year', '<=', $endYear)
-            ->where('price', '>=', $array[0])
-            ->where('price', '<=', $array[1])
-//            ->where('price', '>=', $matches)
-            ->get();
-        return response()->json(['search' => $search_cars], 200);
+        $search_cars = Car::query();
+        $search_cars->when($keyword, function ($q) use ($keyword) {
+            return $q->where('model', 'LIKE', "%{$keyword}%")
+                ->orwhere('body', 'LIKE', "%{$keyword}%");
+        });
+
+        $search_cars->when($startYear && $endYear, function ($q) use ($startYear, $endYear) {
+            return $q->Where('year', '>=', $startYear)
+                ->Where('year', '<=', $endYear);
+        });
+
+        $search_cars->when($min != 100 && $max != 100, function ($q) use ($min, $max) {
+            return $q->Where('price', '>=', $min)
+                ->Where('price', '<=', $max);
+        });
+
+        $search_cars->when($price == "morethan300000", function ($q) {
+            return $q->Where('price', '>', 300000);
+        });
+
+        $car = $search_cars->get();
+
+        return response()->json(['search' => $car], 200);
     }
 
     /**

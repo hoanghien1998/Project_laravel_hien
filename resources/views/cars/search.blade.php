@@ -24,9 +24,10 @@
                     <div class="col-md-12"><label>Price</label></div>
                     <div class="col-md-12">
                         <select class="form-control" name="price">
+                            <option value="anyPrice">Any price</option>
                             <option value="2000-10000">2000 - 10000</option>
-                            <option value="10000-200000">10000 - 200000</option>
-                            <option value="200000-300000">200000 - 300000</option>
+                            <option value="10000-100000">10000 - 100000</option>
+                            <option value="100000-300000">100000 - 300000</option>
                             <option value="morethan300000">More than 300000</option>
                         </select>
                     </div>
@@ -37,7 +38,6 @@
                     </div>
                 </div>
             </form>
-            <span id="showErrorSearch"></span>
         </div>
     </div>
 </div>

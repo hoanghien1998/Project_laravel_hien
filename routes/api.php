@@ -50,4 +50,5 @@ Route::group([
 ], function ($app) {
     $app->post('search', 'CarController@search');
     $app->get('list-car', 'CarController@index');
+    $app->get('details/{id}', 'CarController@show');
 });

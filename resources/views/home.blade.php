@@ -42,6 +42,9 @@
         // Search car
         $("#search").click(function () {
             $(".formSearch").show();
+            $("#keyword").val('');
+            $("#startYear").val('');
+            $("#endYear").val('');
             $("#viewCars").hide();
             $(".profile").hide();
             $(".login-sec").hide();
@@ -51,6 +54,7 @@
         });
         $("#searchFrm").submit(function (event) {
             event.preventDefault();
+            $("#details").hide();
             const url = "http://hien-web.service.docker/api/car/search";
             var form_data = new FormData(this);
             $.ajax({
@@ -80,21 +84,8 @@
                         "</div>"
                 }
                 $('#ResultSearch').html(data);
-
-            }).fail(function (error) {
-                var obj = JSON.parse(error['responseText']);
-                var errors = "";
-
-                $.each(obj.errors, function (index, value) {
-                    errors += value;
-                });
-
-                var errs = "<div class=\"alert alert-danger alert-dismissible\">" +
-                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>" + errors +
-                    "</div>";
-                $("#showErrorSearch").html(errs);
+                $('#ResultSearch').show();
             });
-            return false;
         });
 
         // Show view cars
@@ -105,6 +96,7 @@
             $(".login-sec").hide();
             $(".register").hide();
             $("#details").hide();
+            $('#ResultSearch').hide();
             ViewCars();
         });
 
@@ -127,25 +119,28 @@
 
                     data += "<div class=\"media col-lg-6\" style='margin-top: 20px;'>" +
                         "<div class=\"media-left\">" +
-                        "<img src='storage/uploads/" + image.photo + "' onclick='showCarDetail(this)' class=\"media-object media-img\" style=\"width:150px; height: 150px; border-radius: 3%\" + name='" + obj.id + "'>" +
+                        "<img src='storage/uploads/" + image.photo + "' onclick='showCarDetail(this)' class=\"media-object media-img\" style=\"width:150px; height: 150px; border-radius: 3%\" + data-id='" + obj.id + "'>" +
                         "</div>" +
                         "<div class=\"media-body\">" +
-                        "<h4 class=\"media-heading\" id=\"title\">" + obj.model + " - " + obj.body + "</h4>" +
+                        "<h4 class=\"media-heading\" id=\"title\"><a href= 'javascript:void(0)' onclick='showCarDetail(this)'>" + obj.model + " - " + obj.body + "</a></h4>" +
                         "<p>" + obj.description + "</p>" +
                         "</div>" +
                         "</div>"
                 }
+
                 $('#viewCars').html(data);
             });
         }
 
         // Show car detail
         function showCarDetail(obj) {
-            var id = $(obj).attr('name');
+            var id = $(obj).attr('data-id');
             $("#details").show();
             $("#viewCars").hide();
+            // $(".formSearch").hide();
+            // $('#ResultSearch').hide();
 
-            const url = "http://hien-web.service.docker/api/car/update/";
+            const url = "http://hien-web.service.docker/api/car/details/";
             $.ajax({
                 url: url + id,
                 type: 'GET',
@@ -222,6 +217,8 @@
             $(".login-sec").show();
             $(".register").hide();
             $("#details").hide();
+            $("#ResultSearch").hide();
+            $(".formSearch").hide();
         });
 
         // Login page after submit
@@ -262,6 +259,8 @@
             $(".login-sec").hide();
             $("#viewCars").hide();
             $("#details").hide();
+            $("#ResultSearch").hide();
+            $(".formSearch").hide();
         });
         $('#registerFrm').submit(function (event) {
             event.preventDefault();

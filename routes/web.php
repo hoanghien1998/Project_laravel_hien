@@ -24,8 +24,3 @@ Route::get('/', function () {
 Route::get('/car', function () {
     return view('cars.add-car');
 });
-
-//// Router for details cars
-//Route::get('/detail-cars', function () {
-//    return view('cars.details');
-//});

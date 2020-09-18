@@ -182,15 +182,21 @@
         $("#search").click(function () {
             $(".formSearch").show();
             $("#btnPro").show();
+            $("#keyword").val('');
+            $("#startYear").val('');
+            $("#endYear").val('');
             $("#viewCars").hide();
             $(".login-sec").hide();
             $(".register").hide();
             $(".list-car").hide();
             $(".profile").hide();
+            $("#details").hide();
+            $("#btnPro").hide();
 
         });
         $("#searchFrm").submit(function (event) {
             event.preventDefault();
+            $("#details").hide();
             const url = "http://hien-web.service.docker/api/car/search";
             var form_data = new FormData(this);
             $.ajax({
@@ -220,6 +226,7 @@
                         "</div>"
                 }
                 $('#ResultSearch').html(data);
+                $('#ResultSearch').show();
 
             }).fail(function (error) {
                 var obj = JSON.parse(error['responseText']);
@@ -247,6 +254,8 @@
             $(".login-sec").hide();
             $(".register").hide();
             $(".list-car").hide();
+            $("#details").hide();
+            $("#btnPro").hide();
             ViewCars();
         });
 
@@ -283,11 +292,13 @@
 
         // Show car detail
         function showCarDetail(obj) {
-            var id = $(obj).attr('name');
+            var id = $(obj).attr('data-id');
             $("#details").show();
             $("#viewCars").hide();
+            $(".formSearch").hide();
+            $('#ResultSearch').hide();
 
-            const url = "http://hien-web.service.docker/api/car/update/";
+            const url = "http://hien-web.service.docker/api/car/details/";
             $.ajax({
                 url: url + id,
                 type: 'GET',
@@ -314,11 +325,11 @@
 
                     if (i == 0) {
                         data1 += "<div class=\"item active\" >" +
-                            "<img src='" + "storage/uploads/" + response['car-image'][i]['photo'] + "' alt=\"Los Angeles\" style=\"width: 800px; height: 300px\">" +
+                            "<img src='" + "storage/uploads/" + response['car-image'][i]['photo'] + "' alt=\"Los Angeles\" style=\"width: 600px; height: 300px\">" +
                             "</div>";
                     } else {
                         data1 += "<div class=\"item\" >" +
-                            "<img src='" + "storage/uploads/" + response['car-image'][i]['photo'] + "' alt=\"Los Angeles\" style=\"width: 800px; height: 300px\">" +
+                            "<img src='" + "storage/uploads/" + response['car-image'][i]['photo'] + "' alt=\"Los Angeles\" style=\"width: 600px; height: 300px\">" +
                             "</div>";
                     }
                 }
@@ -588,6 +599,78 @@
                 $("#birthday").val(response['birthday']);
                 $("#gender").val(response['gender']);
                 $("#email").val(response['email']);
+
+            });
+        });
+
+        $("#btnLogin").click(function () {
+            $(".login-sec").show();
+            $(".register").hide();
+            $("#details").hide();
+            $("#ResultSearch").hide();
+            $(".formSearch").hide();
+        });
+
+        // Login page after submit
+        $("#loginFr").submit(function (event) {
+
+            event.preventDefault(); //prevent default action
+            const url = "http://hien-web.service.docker/api/auth/login";
+
+            var form_data = new FormData(this); //Creates new FormData object
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false
+            }).done(function (response) {
+
+                var token = response['access_token'];
+                setCookie('access_token', token, 1);
+                $("#btnPro").show();
+                $("#btnLogout").show();
+                $(".login-sec").hide();
+                $("#btnLogin").hide();
+                $("#btnRegister").hide();
+                $("#viewCars").hide();
+            }).fail(function () {
+                alert("Don't you have an account. Please register account!!! ");
+                $(".register").show();
+                $(".login-sec").hide();
+            });
+        });
+
+        // Register account user
+        $("#btnRegister").click(function () {
+            $(".register").show();
+            $(".login-sec").hide();
+            $("#viewCars").hide();
+            $("#details").hide();
+            $("#ResultSearch").hide();
+            $(".formSearch").hide();
+        });
+        $('#registerFrm').submit(function (event) {
+            event.preventDefault();
+            const url = "http://hien-web.service.docker/api/auth/register";
+
+            var form_data = new FormData(this);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false
+            }).done(function (response) {
+                alert(response['message']);
+                $("#inEmail").val('');
+                $("#inPass").val('');
+                $(".login-sec").show();
+                $(".register").hide();
 
             });
         });
