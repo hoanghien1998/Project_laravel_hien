@@ -24,3 +24,7 @@ Route::get('/', function () {
 Route::get('/car', function () {
     return view('cars.add-car');
 });
+
+Route::get('/{any}', function () {
+    return view('spa');
+});
