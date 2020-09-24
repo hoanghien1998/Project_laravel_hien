@@ -12,11 +12,26 @@ export default new VueRouter({
             path: '/home',
             name: 'home',
             component: Home
-        },
+    },
         {
             path: '/login',
             name: 'login',
             component: Login
-        }
+    },
+        {
+            path: '/login-layout',
+            name: 'login-layout',
+            component: Login,
+            meta: {
+                layout: 'MyCustomLayoutLogin'
+            }
+    },
+        {
+            path: '*',
+            name: 'Error',
+            meta: {
+                layout: 'error'
+            }
+    }
     ]
 })

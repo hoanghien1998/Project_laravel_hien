@@ -1,19 +1,21 @@
 <template>
     <div id="app">
+
         <div id="nav">
-            <router-link :to="{ name: 'home' }">Home</router-link>
-            |
-            <router-link :to="{ name: 'login' }">Login</router-link>
+            <router-link :to="{ name: 'home' }">Home</router-link>|
+            <router-link :to="{ name: 'login' }">Login</router-link> |
+            <router-link :to="{ name: 'login-layout' }">Login-layout</router-link>
         </div>
-        <div class="panel-body">
-            <router-view></router-view>
-        </div>
+        <vue-extend-layouts/>
     </div>
 </template>
 
 <script>
+import VueExtendLayouts from 'vue-extend-layout'
+
 export default {
-    name: "App"
+    name: "App",
+    components: {VueExtendLayouts}
 }
 </script>
 

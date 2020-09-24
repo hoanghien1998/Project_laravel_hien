@@ -6777,6 +6777,11 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
+vue-extend-layout@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/vue-extend-layout/-/vue-extend-layout-2.0.6.tgz#f76e368343c0afd80b9f0e07b0be5b3f5013a416"
+  integrity sha512-wzKOoeWPR0z4goWyHWy7mBYDqVoO1th4DexEv34cqhOqp41wpCwVfZMI0N85Nwxyis/FloGvX+PAhU03I4BUsA==
+
 vue-functional-data-merge@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"

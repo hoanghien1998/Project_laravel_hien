@@ -1,4 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/css/app.css": "/css/app.css",
+    "/layout-layouts-MyCustomLayoutLogin-vue.js": "/layout-layouts-MyCustomLayoutLogin-vue.js",
+    "/layout-layouts-default-vue.js": "/layout-layouts-default-vue.js",
+    "/layout-layouts-error-vue.js": "/layout-layouts-error-vue.js"
 }
